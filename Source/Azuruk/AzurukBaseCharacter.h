@@ -7,33 +7,6 @@
 #include "AzurukBaseCharacter.generated.h"
 
 /**
-*
-*/
-USTRUCT()
-struct FCharacterFeatures
-{
-	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY()
-	USkeletalMesh* charMesh;
-
-	UPROPERTY()
-	UAnimInstance* charAnim;
-
-	//Constructor
-	FCharacterFeatures()
-	{
-
-	}
-
-	FCharacterFeatures(USkeletalMesh* mesh, UAnimInstance* anim)
-	{
-		charMesh = mesh;
-		charAnim = anim;
-	}
-};
-
-/**
  * 
  */
 UCLASS()
@@ -58,6 +31,9 @@ class AAzurukBaseCharacter : public ACharacter
 		TSubobjectPtr<class UCameraComponent> FollowCamera;
 
 protected:	
+	
+	/* Dynamic Pointer Array */
+	TArray<USkeletalMeshComponent*> CharacterFeatures;
 
 	/* Called for forwards/backward input */
 	void MoveForward(float Value);
