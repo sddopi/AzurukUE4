@@ -15,6 +15,9 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
+	useDistance = 100.f;
+	numFeatures = 1;
+
 	// Configure character movement
 	CharacterMovement->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	CharacterMovement->RotationRate = FRotator(0.0f, 560.0f, 0.0f); // ...at this rotation rate
@@ -31,8 +34,6 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	FollowCamera = PCIP.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FollowCamera"));
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUseControllerViewRotation = false; // Camera does not rotate relative to arm
-
-	CharacterFeatures.Add(Mesh);
 }
 
 void AAzurukBaseCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -81,11 +82,13 @@ void AAzurukBaseCharacter::MoveRight(float Value)
 
 void AAzurukBaseCharacter::UseObject()
 {
-	AActor* useObj = GetClosestUse();
+	AActor* tActor = GetClosestUse();
 
-	if (Cast<AAzurukBaseCharacter>(useObj)!=nullptr)
+	AAzurukBaseCharacter* tAChar = Cast<AAzurukBaseCharacter>(tActor);
+
+	if (tAChar != nullptr)
 	{
-		AAzurukBaseCharacter* usePawn = Cast<AAzurukBaseCharacter>(useObj);
+		Mesh->SetSkeletalMesh(tAChar->Mesh->SkeletalMesh);
 	}
 }
 
@@ -93,9 +96,9 @@ AActor* AAzurukBaseCharacter::GetClosestUse()
 {
 	// Get an Array of usable objects
 	TArray<struct FOverlapResult> Overlaps;
-	GetWorld()->OverlapMulti(Overlaps, this->GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_Pawn, FCollisionShape::MakeSphere(UseDistance), FCollisionQueryParams());
+	GetWorld()->OverlapMulti(Overlaps, this->GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel1, FCollisionShape::MakeSphere(useDistance), FCollisionQueryParams());
 
-	if (Overlaps.Num()>0)
+	if (Overlaps.Num() != 0)
 	{
 		return Overlaps[0].GetActor();
 	}

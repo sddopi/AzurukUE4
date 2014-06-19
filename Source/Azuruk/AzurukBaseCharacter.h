@@ -16,11 +16,7 @@ class AAzurukBaseCharacter : public ACharacter
 
 	/* Use object distance */
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
-		float UseDistance;
-
-	/* Character Name */
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
-		FName CharacterName;
+		float useDistance;
 	
 	/* Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -32,9 +28,6 @@ class AAzurukBaseCharacter : public ACharacter
 
 protected:	
 	
-	/* Dynamic Pointer Array */
-	TArray<USkeletalMeshComponent*> CharacterFeatures;
-
 	/* Called for forwards/backward input */
 	void MoveForward(float Value);
 
