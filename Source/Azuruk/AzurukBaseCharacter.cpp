@@ -3,6 +3,7 @@
 #include "Azuruk.h"
 #include "AzurukBaseCharacter.h"
 
+const uint8 DEFAULTFEATURE = uint8(0);
 
 AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
@@ -10,12 +11,14 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	// Don't let Azuruk Characters die
 	InitialLifeSpan = 0;
 
+	// Azuruk Property Defaults
+	useDistance = 100.f;
+	maxFeatures = 1;
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-
-	useDistance = 100.f;
 
 	// Configure character movement
 	CharacterMovement->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -41,6 +44,8 @@ void AAzurukBaseCharacter::SetupPlayerInputComponent(class UInputComponent* Inpu
 	// Set up action bindings
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Use", IE_Pressed, this, &AAzurukBaseCharacter::UseObject);
+	InputComponent->BindAction("MorphOne", IE_Pressed, this, &AAzurukBaseCharacter::MorphOne);
+	InputComponent->BindAction("MorphTwo", IE_Pressed, this, &AAzurukBaseCharacter::MorphTwo);
 	// Set up movement bindings
 	InputComponent->BindAxis("MoveForward", this, &AAzurukBaseCharacter::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AAzurukBaseCharacter::MoveRight);
@@ -83,13 +88,9 @@ void AAzurukBaseCharacter::UseObject()
 {
 	AActor* tActor = GetClosestUse();
 
-	AAzurukBaseCharacter* tAChar = Cast<AAzurukBaseCharacter>(tActor);
-
-	if (tAChar != nullptr)
+	if (Cast<AAzurukBaseCharacter>(tActor) != nullptr)
 	{
-		Mesh->SetAnimClass(tAChar->Mesh->GetAnimInstance()->GetClass());
-		Mesh->SetSkeletalMesh(tAChar->Mesh->SkeletalMesh);
-		
+		this->AddFeatures(Cast<AAzurukBaseCharacter>(tActor)->Mesh);
 	}
 }
 
@@ -104,6 +105,29 @@ AActor* AAzurukBaseCharacter::GetClosestUse()
 		return Overlaps[0].GetActor();
 	}
 	return NULL;
+}
+
+void AAzurukBaseCharacter::AddFeatures(USkeletalMeshComponent* NewMesh)
+{
+	if (!characterFeatures.Contains(NewMesh))
+	{
+		characterFeatures.Add(NewMesh);
+	}
+}
+
+void AAzurukBaseCharacter::MorphOne() { SetFeatures(uint8(0)); }
+void AAzurukBaseCharacter::MorphTwo() { SetFeatures(uint8(1)); }
+void AAzurukBaseCharacter::SetFeatures(uint8 index)
+{
+	if (characterFeatures.IsValidIndex(index) && Mesh->SkeletalMesh != characterFeatures[index]->SkeletalMesh)
+	{
+		Mesh->SetAnimClass(characterFeatures[index]->GetAnimInstance()->GetClass());
+		Mesh->SetSkeletalMesh(characterFeatures[index]->SkeletalMesh);
+	}
+	else
+	{
+		/* TODO: Functionality for Default Mesh/Anim */
+	}
 }
 
 
