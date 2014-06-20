@@ -16,7 +16,6 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	bUseControllerRotationRoll = false;
 
 	useDistance = 100.f;
-	numFeatures = 1;
 
 	// Configure character movement
 	CharacterMovement->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -88,7 +87,9 @@ void AAzurukBaseCharacter::UseObject()
 
 	if (tAChar != nullptr)
 	{
+		Mesh->SetAnimClass(tAChar->Mesh->GetAnimInstance()->GetClass());
 		Mesh->SetSkeletalMesh(tAChar->Mesh->SkeletalMesh);
+		
 	}
 }
 
