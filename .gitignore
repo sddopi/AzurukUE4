@@ -3,6 +3,7 @@
 *.sdf
 *.sln
 *.suo
+DefaultEditorUserSettings.ini
 
 # Exclude parts of the directory hierarchy that contain foundation/shared item
 # Please keep an eye out if you find yourself changing these items
