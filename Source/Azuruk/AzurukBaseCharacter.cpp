@@ -36,6 +36,18 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	FollowCamera = PCIP.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FollowCamera"));
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUseControllerViewRotation = false; // Camera does not rotate relative to arm
+
+	TSubobjectPtr<class USkeletalMeshComponent> DefaultMesh;
+	DefaultMesh = PCIP.CreateDefaultSubobject<USkeletalMeshComponent>(this, TEXT("DefaultMesh"));
+	characterFeatures.Add(DefaultMesh);
+}
+
+void AAzurukBaseCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	characterFeatures[0]->SetSkeletalMesh(Mesh->SkeletalMesh);
+	characterFeatures[0]->SetAnimClass(Mesh->GetAnimInstance()->GetClass());
 }
 
 void AAzurukBaseCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -115,8 +127,8 @@ void AAzurukBaseCharacter::AddFeatures(USkeletalMeshComponent* NewMesh)
 	}
 }
 
-void AAzurukBaseCharacter::MorphOne() { SetFeatures(uint8(0)); }
-void AAzurukBaseCharacter::MorphTwo() { SetFeatures(uint8(1)); }
+void AAzurukBaseCharacter::MorphOne() { SetFeatures(uint8(1)); }
+void AAzurukBaseCharacter::MorphTwo() { SetFeatures(uint8(2)); }
 void AAzurukBaseCharacter::SetFeatures(uint8 index)
 {
 	if (characterFeatures.IsValidIndex(index) && Mesh->SkeletalMesh != characterFeatures[index]->SkeletalMesh)
@@ -126,7 +138,8 @@ void AAzurukBaseCharacter::SetFeatures(uint8 index)
 	}
 	else
 	{
-		/* TODO: Functionality for Default Mesh/Anim */
+		Mesh->SetAnimClass(characterFeatures[0]->GetAnimInstance()->GetClass());
+		Mesh->SetSkeletalMesh(characterFeatures[0]->SkeletalMesh);
 	}
 }
 

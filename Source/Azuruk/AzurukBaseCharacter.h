@@ -3,10 +3,36 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "Animation/AnimInstance.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "AzurukBaseCharacter.generated.h"
 
-/**
+/*
+ *
+ */
+//USTRUCT()
+//struct FMeshFeatures
+//{
+//	GENERATED_USTRUCT_BODY()
+//
+//	UPROPERTY()
+//		class USkeletalMesh* skelMesh;
+//
+//	UPROPERTY()
+//		class UAnimInstance* animInstance;
+//
+//	FMeshFeatures()
+//	{
+//	}
+//
+//	void Init(class USkeletalMesh* sMesh, class UAnimInstance* aInstance)
+//	{
+//		skelMesh = sMesh;
+//		animInstance = aInstance;
+//	}
+//};
+
+/*
  * 
  */
 UCLASS()
@@ -32,12 +58,6 @@ class AAzurukBaseCharacter : public ACharacter
 
 protected:
 
-	UPROPERTY()
-		class USkeletalMesh* defaultMesh;
-
-	UPROPERTY()
-		class UAnimInstance* defaultAnim;
-
 	/* Dynamic Mesh Features Array */
 	UPROPERTY()
 		TArray<USkeletalMeshComponent*> characterFeatures;
@@ -61,6 +81,9 @@ protected:
 	void SetFeatures(uint8 index);
 	void MorphOne();
 	void MorphTwo();
+
+	/* PostInitializeComponents */
+	virtual void PostInitializeComponents() OVERRIDE;
 
 	/* APawn interface */
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;	
