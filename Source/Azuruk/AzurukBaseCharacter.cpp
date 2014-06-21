@@ -13,7 +13,6 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 
 	// Azuruk Property Defaults
 	useDistance = 100.f;
-	maxFeatures = 1;
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -37,6 +36,7 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUseControllerViewRotation = false; // Camera does not rotate relative to arm
 
+	// Create a SkeletalMeshComp to store Default Features
 	TSubobjectPtr<class USkeletalMeshComponent> DefaultMesh;
 	DefaultMesh = PCIP.CreateDefaultSubobject<USkeletalMeshComponent>(this, TEXT("DefaultMesh"));
 	characterFeatures.Add(DefaultMesh);
@@ -45,9 +45,9 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 void AAzurukBaseCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-	characterFeatures[0]->SetSkeletalMesh(Mesh->SkeletalMesh);
-	characterFeatures[0]->SetAnimClass(Mesh->GetAnimInstance()->GetClass());
+	// Assign Default Features
+	characterFeatures[DEFAULTFEATURE]->SetSkeletalMesh(Mesh->SkeletalMesh);
+	characterFeatures[DEFAULTFEATURE]->SetAnimClass(Mesh->GetAnimInstance()->GetClass());
 }
 
 void AAzurukBaseCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -138,8 +138,8 @@ void AAzurukBaseCharacter::SetFeatures(uint8 index)
 	}
 	else
 	{
-		Mesh->SetAnimClass(characterFeatures[0]->GetAnimInstance()->GetClass());
-		Mesh->SetSkeletalMesh(characterFeatures[0]->SkeletalMesh);
+		Mesh->SetAnimClass(characterFeatures[DEFAULTFEATURE]->GetAnimInstance()->GetClass());
+		Mesh->SetSkeletalMesh(characterFeatures[DEFAULTFEATURE]->SkeletalMesh);
 	}
 }
 

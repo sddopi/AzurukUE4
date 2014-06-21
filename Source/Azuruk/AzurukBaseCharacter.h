@@ -8,31 +8,6 @@
 #include "AzurukBaseCharacter.generated.h"
 
 /*
- *
- */
-//USTRUCT()
-//struct FMeshFeatures
-//{
-//	GENERATED_USTRUCT_BODY()
-//
-//	UPROPERTY()
-//		class USkeletalMesh* skelMesh;
-//
-//	UPROPERTY()
-//		class UAnimInstance* animInstance;
-//
-//	FMeshFeatures()
-//	{
-//	}
-//
-//	void Init(class USkeletalMesh* sMesh, class UAnimInstance* aInstance)
-//	{
-//		skelMesh = sMesh;
-//		animInstance = aInstance;
-//	}
-//};
-
-/*
  * 
  */
 UCLASS()
@@ -43,10 +18,6 @@ class AAzurukBaseCharacter : public ACharacter
 	/* Use object distance */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
 		float useDistance;
-
-	/* Use object distance */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
-		int8 maxFeatures;
 	
 	/* Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -71,13 +42,19 @@ protected:
 	/* Called for collecting creature DNA */
 	void UseObject();
 
-	/* Get closest usable object */
+	/* Get closest usable object 
+	 *
+	 * TO-DO: Get closest object (If necessary)	 
+	 */
 	AActor* GetClosestUse();
 
 	/* Adds features to features array */
 	void AddFeatures(USkeletalMeshComponent* NewMesh);
 
-	/* Sets current features to new mesh */
+	/* Sets current features to new mesh 
+	 * 
+	 * MorphOne and MorphTwo call SetFeatures with Index
+	 */
 	void SetFeatures(uint8 index);
 	void MorphOne();
 	void MorphTwo();
