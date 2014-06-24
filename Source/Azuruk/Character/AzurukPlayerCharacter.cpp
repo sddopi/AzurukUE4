@@ -1,16 +1,12 @@
 
 
 #include "Azuruk.h"
-#include "AzurukBaseCharacter.h"
+#include "AzurukPlayerCharacter.h"
 
-const uint8 DEFAULTFEATURE = uint8(0);
 
-AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeProperties& PCIP)
+AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-	// Don't let Azuruk Characters die
-	InitialLifeSpan = 0;
-
 	// Azuruk Property Defaults
 	useDistance = 100.f;
 
@@ -18,12 +14,6 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-
-	// Configure character movement
-	CharacterMovement->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	CharacterMovement->RotationRate = FRotator(0.0f, 560.0f, 0.0f); // ...at this rotation rate
-	CharacterMovement->JumpZVelocity = 600.f;
-	CharacterMovement->AirControl = 0.2f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = PCIP.CreateDefaultSubobject<USpringArmComponent>(this, TEXT("CameraBoom"));
@@ -35,40 +25,38 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	FollowCamera = PCIP.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FollowCamera"));
 	FollowCamera->AttachTo(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUseControllerViewRotation = false; // Camera does not rotate relative to arm
-
-	// Create a SkeletalMeshComp to store Default Features
-	TSubobjectPtr<class USkeletalMeshComponent> DefaultMesh;
-	DefaultMesh = PCIP.CreateDefaultSubobject<USkeletalMeshComponent>(this, TEXT("DefaultMesh"));
-	characterFeatures.Add(DefaultMesh);
 }
 
-void AAzurukBaseCharacter::PostInitializeComponents()
+void AAzurukPlayerCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	// Assign Default Features
-	characterFeatures[DEFAULTFEATURE]->SetSkeletalMesh(Mesh->SkeletalMesh);
-	characterFeatures[DEFAULTFEATURE]->SetAnimClass(Mesh->GetAnimInstance()->GetClass());
+	if (Mesh->SkeletalMesh != nullptr && Mesh->GetAnimInstance() != nullptr)
+	{
+		defaultMesh = Mesh->SkeletalMesh;
+		defaultAnimInstance = Mesh->GetAnimInstance()->GetClass();
+	}
 }
 
-void AAzurukBaseCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
+void AAzurukPlayerCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
 	check(InputComponent);
 	// Set up action bindings
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	InputComponent->BindAction("Use", IE_Pressed, this, &AAzurukBaseCharacter::UseObject);
-	InputComponent->BindAction("MorphOne", IE_Pressed, this, &AAzurukBaseCharacter::MorphOne);
-	InputComponent->BindAction("MorphTwo", IE_Pressed, this, &AAzurukBaseCharacter::MorphTwo);
+	InputComponent->BindAction("Use", IE_Pressed, this, &AAzurukPlayerCharacter::UseObject);
+	InputComponent->BindAction("MorphOne", IE_Pressed, this, &AAzurukPlayerCharacter::MorphOne);
+	InputComponent->BindAction("MorphTwo", IE_Pressed, this, &AAzurukPlayerCharacter::MorphTwo);
 	// Set up movement bindings
-	InputComponent->BindAxis("MoveForward", this, &AAzurukBaseCharacter::MoveForward);
-	InputComponent->BindAxis("MoveRight", this, &AAzurukBaseCharacter::MoveRight);
+	InputComponent->BindAxis("MoveForward", this, &AAzurukPlayerCharacter::MoveForward);
+	InputComponent->BindAxis("MoveRight", this, &AAzurukPlayerCharacter::MoveRight);
 	// Set up rotation bindings
 	InputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	InputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 }
 
-void AAzurukBaseCharacter::MoveForward(float Amount)
+void AAzurukPlayerCharacter::MoveForward(float Amount)
 {
-	if ((Controller!=NULL)&&(Amount!=0.0f))
+	if ((Controller != NULL) && (Amount != 0.0f))
 	{
 		// Find forward vector
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -81,9 +69,9 @@ void AAzurukBaseCharacter::MoveForward(float Amount)
 	}
 }
 
-void AAzurukBaseCharacter::MoveRight(float Value)
+void AAzurukPlayerCharacter::MoveRight(float Value)
 {
-	if ((Controller!=NULL)&&(Value!=0.0f))
+	if ((Controller != NULL) && (Value != 0.0f))
 	{
 		// Find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -96,7 +84,7 @@ void AAzurukBaseCharacter::MoveRight(float Value)
 	}
 }
 
-void AAzurukBaseCharacter::UseObject()
+void AAzurukPlayerCharacter::UseObject()
 {
 	AActor* tActor = GetClosestUse();
 
@@ -106,7 +94,7 @@ void AAzurukBaseCharacter::UseObject()
 	}
 }
 
-AActor* AAzurukBaseCharacter::GetClosestUse()
+AActor* AAzurukPlayerCharacter::GetClosestUse()
 {
 	// Get an Array of usable objects
 	TArray<struct FOverlapResult> Overlaps;
@@ -119,7 +107,7 @@ AActor* AAzurukBaseCharacter::GetClosestUse()
 	return NULL;
 }
 
-void AAzurukBaseCharacter::AddFeatures(USkeletalMeshComponent* NewMesh)
+void AAzurukPlayerCharacter::AddFeatures(USkeletalMeshComponent* NewMesh)
 {
 	if (!characterFeatures.Contains(NewMesh))
 	{
@@ -127,9 +115,15 @@ void AAzurukBaseCharacter::AddFeatures(USkeletalMeshComponent* NewMesh)
 	}
 }
 
-void AAzurukBaseCharacter::MorphOne() { SetFeatures(uint8(1)); }
-void AAzurukBaseCharacter::MorphTwo() { SetFeatures(uint8(2)); }
-void AAzurukBaseCharacter::SetFeatures(uint8 index)
+void AAzurukPlayerCharacter::MorphOne()
+{
+	SetFeatures(uint8(0));
+}
+void AAzurukPlayerCharacter::MorphTwo()
+{
+	SetFeatures(uint8(1));
+}
+void AAzurukPlayerCharacter::SetFeatures(uint8 index)
 {
 	if (characterFeatures.IsValidIndex(index) && Mesh->SkeletalMesh != characterFeatures[index]->SkeletalMesh)
 	{
@@ -138,9 +132,7 @@ void AAzurukBaseCharacter::SetFeatures(uint8 index)
 	}
 	else
 	{
-		Mesh->SetAnimClass(characterFeatures[DEFAULTFEATURE]->GetAnimInstance()->GetClass());
-		Mesh->SetSkeletalMesh(characterFeatures[DEFAULTFEATURE]->SkeletalMesh);
+		Mesh->SetAnimClass(defaultAnimInstance);
+		Mesh->SetSkeletalMesh(defaultMesh);
 	}
 }
-
-
