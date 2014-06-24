@@ -6,12 +6,27 @@ public class Azuruk : ModuleRules
 {
 	public Azuruk(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+        PrivateIncludePaths.AddRange(
+            new string[] { 
+                "Azuruk",
+				"Azuruk/Character",
+            }
+        );
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PublicDependencyModuleNames.AddRange(
+            new string[] { 
+                "Core", 
+                "CoreUObject", 
+                "Engine", 
+                "InputCore" 
+            }
+        );
 
-		// Uncomment if you are using Slate UI
-		// PrivateDependencyModuleNames.Add("Slate");
+        PrivateDependencyModuleNames.AddRange(
+            new string[] {
+				"Slate",
+			}
+        );
 		
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
