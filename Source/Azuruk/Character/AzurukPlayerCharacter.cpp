@@ -88,7 +88,7 @@ void AAzurukPlayerCharacter::UseObject()
 {
 	AActor* tActor = GetClosestUse();
 
-	if (Cast<AAzurukBaseCharacter>(tActor) != nullptr)
+	if (Cast<AAzurukBaseCharacter>(tActor) != nullptr && Cast<AAzurukBaseCharacter>(tActor)->bIsDying)
 	{
 		this->AddFeatures(Cast<AAzurukBaseCharacter>(tActor)->Mesh);
 	}

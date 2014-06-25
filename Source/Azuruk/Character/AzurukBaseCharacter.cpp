@@ -116,8 +116,6 @@ void AAzurukBaseCharacter::SetRagdollPhysics()
 		CharacterMovement->StopMovementImmediately();
 		CharacterMovement->DisableMovement();
 		CharacterMovement->SetComponentTickEnabled(false);
-
-		bInRagdoll = true;
 	}	
 }
 
