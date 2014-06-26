@@ -15,27 +15,27 @@ class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 
 	/* Use object distance */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
-		float useDistance;
+	float useDistance;
 
 	/* Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		TSubobjectPtr<class USpringArmComponent> CameraBoom;
+	TSubobjectPtr<class USpringArmComponent> CameraBoom;
 
 	/* Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		TSubobjectPtr<class UCameraComponent> FollowCamera;
+	TSubobjectPtr<class UCameraComponent> FollowCamera;
 
 private:
 
 	/* Dynamic Mesh Features Array */
 	UPROPERTY()
-		TArray<USkeletalMeshComponent*> characterFeatures;
+	TArray<USkeletalMeshComponent*> characterFeatures;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Azuruk Properties")
-		USkeletalMesh* defaultMesh;
+	USkeletalMesh* defaultMesh;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Azuruk Properties")
-		UClass* defaultAnimInstance;
+	UClass* defaultAnimInstance;
 
 	/* Called for forwards/backward input */
 	void MoveForward(float Value);

@@ -11,8 +11,8 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	// Don't let Azuruk Characters die
 	InitialLifeSpan = 0;
 
-	// Rotate Mesh
-	Mesh->SetRelativeRotation(FRotator(0, 0, -90));
+	// Default Max Health
+	maxHealth = 100.f;
 
 	// Configure character movement
 	CharacterMovement->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -27,7 +27,7 @@ void AAzurukBaseCharacter::PostInitializeComponents()
 
 	if (Role = ROLE_Authority)
 	{
-		Health = GetMaxHealth();
+		Health = maxHealth;
 	}
 }
 
@@ -123,7 +123,7 @@ void AAzurukBaseCharacter::ModifyHealth(float Amount)
 {
 	Health = FMath::IsNegativeFloat(Amount) 
 		// Heal 
-		? FMath::Min(Health - Amount, GetMaxHealth())
+		? FMath::Min(Health - Amount, maxHealth)
 		// Damage
 		: FMath::Min(Health - Amount, 0.f);
 }
@@ -131,11 +131,6 @@ void AAzurukBaseCharacter::ModifyHealth(float Amount)
 float AAzurukBaseCharacter::GetHealth()
 {
 	return Health;
-}
-
-float AAzurukBaseCharacter::GetMaxHealth() const
-{
-	return GetClass()->GetDefaultObject<AAzurukBaseCharacter>()->Health;
 }
 
 

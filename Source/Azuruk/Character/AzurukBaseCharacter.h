@@ -40,7 +40,7 @@ public:
 
 	/** Identifies if pawn is in its dying state */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Health)
-		uint32 bIsDying : 1;
+	uint32 bIsDying : 1;
 
 private:
 
@@ -51,11 +51,12 @@ private:
 // Health
 public:
 
+	/* Health Value */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Health)
+	float maxHealth;
+
 	/* Returns Health Value */
 	float GetHealth();
-
-	/* Returns Max Health */
-	float GetMaxHealth() const;
 
 private:
 
@@ -66,5 +67,4 @@ private:
 
 	/* Health Value */
 	float Health;
-
 };
