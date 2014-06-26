@@ -117,15 +117,21 @@ void AAzurukPlayerCharacter::AddFeatures(USkeletalMeshComponent* NewMesh)
 
 void AAzurukPlayerCharacter::MorphOne()
 {
-	SetFeatures(uint8(0));
+	if (characterFeatures.IsValidIndex(0))
+	{
+		SetFeatures(uint8(0));
+	}
 }
 void AAzurukPlayerCharacter::MorphTwo()
 {
-	SetFeatures(uint8(1));
+	if (characterFeatures.IsValidIndex(1))
+	{
+		SetFeatures(uint8(1));
+	}
 }
 void AAzurukPlayerCharacter::SetFeatures(uint8 index)
 {
-	if (characterFeatures.IsValidIndex(index) && Mesh->SkeletalMesh != characterFeatures[index]->SkeletalMesh)
+	if (Mesh->SkeletalMesh != characterFeatures[index]->SkeletalMesh)
 	{
 		Mesh->SetAnimClass(characterFeatures[index]->GetAnimInstance()->GetClass());
 		Mesh->SetSkeletalMesh(characterFeatures[index]->SkeletalMesh);
