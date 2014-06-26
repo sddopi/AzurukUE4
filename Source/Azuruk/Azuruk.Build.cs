@@ -10,6 +10,7 @@ public class Azuruk : ModuleRules
             new string[] { 
                 "Azuruk",
 				"Azuruk/Character",
+                "Azuruk/UI",
             }
         );
 
@@ -25,6 +26,7 @@ public class Azuruk : ModuleRules
         PrivateDependencyModuleNames.AddRange(
             new string[] {
 				"Slate",
+                "SlateCore",
 			}
         );
 		
