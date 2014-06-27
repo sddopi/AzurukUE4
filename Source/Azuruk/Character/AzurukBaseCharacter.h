@@ -9,7 +9,7 @@
 /*
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class AAzurukBaseCharacter : public ACharacter
 {
 	GENERATED_UCLASS_BODY()
