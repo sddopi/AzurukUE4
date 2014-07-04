@@ -19,6 +19,10 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	CharacterMovement->RotationRate = FRotator(0.0f, 560.0f, 0.0f); // ...at this rotation rate
 	CharacterMovement->JumpZVelocity = 600.f;
 	CharacterMovement->AirControl = 0.2f;
+
+	// Create ability manager
+	//AbilityManager = PCIP.CreateDefaultSubobject<UAzurukAbilityManager>(this, TEXT("AbilityManager"));
+	//AbilityManager->bAutoActivate = true;
 }
 
 void AAzurukBaseCharacter::PostInitializeComponents()
@@ -133,5 +137,23 @@ float AAzurukBaseCharacter::GetHealth()
 	return Health;
 }
 
+void AAzurukBaseCharacter::ActionButtonOne()
+{
+	/*AAzurukPlayerController* PC = Cast<AAzurukPlayerController>(Controller);
+	if (PC)
+	{
+		AbilityManager->GetButtonOne()->InputPressed();
+		OnCharacterCast.Broadcast();
+	}*/
+}
+
+void AAzurukBaseCharacter::ActionButtonOneReleased()
+{
+	/*AAzurukPlayerController* PC = Cast<AAzurukPlayerController>(Controller);
+	if (PC)
+	{
+	AbilityManager->GetButtonOne()->InputReleased();
+	}*/
+}
 
 

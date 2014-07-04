@@ -67,4 +67,22 @@ private:
 
 	/* Health Value */
 	float Health;
+
+//////////////////////////////////////////////////////////////////////////
+// Managers
+public:
+
+	/* Ability manager */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Componenets)
+	TSubobjectPtr<class UAzurukAbilityManager> AbilityManager;
+
+//////////////////////////////////////////////////////////////////////////
+// Ability buttons
+public:
+
+	/* Button one */
+	UFUNCTION()
+	void ActionButtonOne();
+	UFUNCTION()
+	void ActionButtonOneReleased();
 };
