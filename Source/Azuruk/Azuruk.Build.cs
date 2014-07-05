@@ -11,6 +11,8 @@ public class Azuruk : ModuleRules
                 "Azuruk",
 				"Azuruk/Character",
                 "Azuruk/UI",
+                "Azuruk/Abilities",
+                "Azuruk/Effects",
             }
         );
 

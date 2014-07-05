@@ -12,8 +12,8 @@ AAzurukHUD::AAzurukHUD(const class FPostConstructInitializeProperties& PCIP)
 
 	HUDHealthAssets = HUDHealthAssetsOb.Object;
 
-	HealthBar = UCanvas::MakeIcon(HUDHealthAssets, 67, 212, 372, 50);
-	HealthBarBg = UCanvas::MakeIcon(HUDHealthAssets, 67, 162, 372, 50);
+	HealthBar = UCanvas::MakeIcon(HUDHealthAssets, 32, 84, 420, 50);
+	HealthBarBg = UCanvas::MakeIcon(HUDHealthAssets, 32, 34, 420, 50);
 	HealthIcon = UCanvas::MakeIcon(HUDHealthAssets, 78, 262, 28, 28);
 
 	Offset = 20.0f;
@@ -23,12 +23,19 @@ void AAzurukHUD::DrawHUD()
 {
 	Super::DrawHUD();
 
+	AAzurukPlayerCharacter* MyPawn = Cast<AAzurukPlayerCharacter>(GetOwningPawn());
+
 	ScaleUI = Canvas->ClipY / 1080.0f;
 
 	// enforce min
 	ScaleUI = FMath::Max(ScaleUI, MinHudScale);
 
-	DrawHealth();
+
+	if (MyPawn && MyPawn->IsAlive())
+	{
+		DrawHealth();
+	}
+	
 }
 
 void AAzurukHUD::DrawHealth()
@@ -38,9 +45,9 @@ void AAzurukHUD::DrawHealth()
 	const float HealthPosX = (Canvas->ClipX + HealthBarBg.UL) / 2;
 	const float HealthPosY = (Canvas->ClipY / 2) - (Offset + HealthBarBg.VL) * ScaleUI;
 	Canvas->DrawIcon(HealthBarBg, HealthPosX, HealthPosY, ScaleUI);
-	const float HealthAmount = FMath::Min(1.0f, MyPawn->GetHealth() / MyPawn->maxHealth);
+	const float HealthAmount = FMath::Min(1.0f, MyPawn->Health / MyPawn->GetMaxHealth());
 
-	FCanvasTileItem TileItem(FVector2D(HealthPosX, HealthPosY), HealthBar.Texture->Resource, FVector2D(HealthBar.UL * HealthAmount  * ScaleUI, HealthBar.VL * ScaleUI), FLinearColor::White);
+	FCanvasTileItem TileItem(FVector2D(HealthPosX, HealthPosY), HealthBar.Texture->Resource, FVector2D(HealthBar.UL * HealthAmount  * ScaleUI, HealthBar.VL * ScaleUI), FLinearColor::Red);
 	MakeUV(HealthBar, TileItem.UV0, TileItem.UV1, HealthBar.U, HealthBar.V, HealthBar.UL * HealthAmount, HealthBar.VL);
 	TileItem.BlendMode = SE_BLEND_Translucent;
 	Canvas->DrawItem(TileItem);

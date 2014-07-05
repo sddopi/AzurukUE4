@@ -12,7 +12,7 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	InitialLifeSpan = 0;
 
 	// Default Max Health
-	maxHealth = 100.f;
+	Health = 100.f;
 
 	// Configure character movement
 	CharacterMovement->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -31,8 +31,14 @@ void AAzurukBaseCharacter::PostInitializeComponents()
 
 	if (Role = ROLE_Authority)
 	{
-		Health = maxHealth;
+		Health = GetMaxHealth();
 	}
+}
+
+void AAzurukBaseCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
 }
 
 float AAzurukBaseCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
@@ -48,7 +54,7 @@ float AAzurukBaseCharacter::TakeDamage(float Damage, struct FDamageEvent const& 
 	{
 		ModifyHealth(ActualDamage);
 
-		if (GetHealth() <= 0)
+		if (Health <= 0)
 		{
 			Die(ActualDamage, DamageEvent, EventInstigator, DamageCauser);
 		}
@@ -127,14 +133,19 @@ void AAzurukBaseCharacter::ModifyHealth(float Amount)
 {
 	Health = FMath::IsNegativeFloat(Amount) 
 		// Heal 
-		? FMath::Min(Health - Amount, maxHealth)
+		? FMath::Min(Health - Amount, GetMaxHealth())
 		// Damage
-		: FMath::Min(Health - Amount, 0.f);
+		: FMath::Max(Health - Amount, 0.f);
 }
 
-float AAzurukBaseCharacter::GetHealth()
+float AAzurukBaseCharacter::GetMaxHealth() const
 {
-	return Health;
+	return GetClass()->GetDefaultObject<AAzurukBaseCharacter>()->Health;
+}
+
+bool AAzurukBaseCharacter::IsAlive() const
+{
+	return Health > 0;
 }
 
 void AAzurukBaseCharacter::ActionButtonOne()

@@ -19,6 +19,8 @@ public:
 	/* PostInitializeComponents */
 	virtual void PostInitializeComponents() OVERRIDE;
 
+	virtual void Tick(float DeltaTime) OVERRIDE;
+
 //////////////////////////////////////////////////////////////////////////
 // Damage and Death
 	
@@ -52,11 +54,14 @@ private:
 public:
 
 	/* Health Value */
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Health)
-	float maxHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
+	float Health;
 
 	/* Returns Health Value */
-	float GetHealth();
+	float GetMaxHealth() const;
+
+	/* check if pawn is still alive */
+	bool IsAlive() const;
 
 private:
 
@@ -65,16 +70,13 @@ private:
 	 */
 	void ModifyHealth(float Amount);
 
-	/* Health Value */
-	float Health;
-
 //////////////////////////////////////////////////////////////////////////
 // Managers
 public:
 
 	/* Ability manager */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Componenets)
-	TSubobjectPtr<class UAzurukAbilityManager> AbilityManager;
+	TSubclassOf<class UAzurukAbilityManager> AbilityManager;
 
 //////////////////////////////////////////////////////////////////////////
 // Ability buttons
