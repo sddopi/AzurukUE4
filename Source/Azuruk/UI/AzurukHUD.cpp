@@ -26,6 +26,7 @@ void AAzurukHUD::DrawHUD()
 	if (MyPawn && MyPawn->IsAlive())
 	{
 		DrawHealth();
+		DrawMorphBar();
 	}
 	
 }
@@ -37,14 +38,18 @@ void AAzurukHUD::DrawHealth()
 	const float HealthPosX = (Canvas->ClipX + HealthBarBack.UL) / 2;
 	const float HealthPosY = (Canvas->ClipY / 2) - (Offset + HealthBarBack.VL) * ScaleUI;
 	Canvas->DrawIcon(HealthBarBack, HealthPosX, HealthPosY, ScaleUI);
-	const float HealthAmount = FMath::Min(1.0f, MyPawn->Health / MyPawn->GetMaxHealth());
+	const float HealthAmount = FMath::Min(1.0f, MyPawn->GetHealth() / MyPawn->GetMaxHealth());
 
-	FCanvasTileItem TileItem(FVector2D(HealthPosX, HealthPosY), HealthBar.Texture->Resource, FVector2D(HealthBar.UL * HealthAmount  * ScaleUI, HealthBar.VL * ScaleUI), FLinearColor::Red);
+	FCanvasTileItem TileItem(FVector2D(HealthPosX, HealthPosY), HealthBar.Texture->Resource, FVector2D(HealthBar.UL * HealthAmount  * ScaleUI, HealthBar.VL * ScaleUI), FLinearColor::White);
 	MakeUV(HealthBar, TileItem.UV0, TileItem.UV1, HealthBar.U, HealthBar.V, HealthBar.UL * HealthAmount, HealthBar.VL);
 	TileItem.BlendMode = SE_BLEND_Translucent;
 	Canvas->DrawItem(TileItem);
 
 	Canvas->DrawIcon(HealthIcon, HealthPosX + Offset * ScaleUI, HealthPosY + (HealthBar.VL - HealthIcon.VL) / 2.0f * ScaleUI, ScaleUI);
+}
+
+void AAzurukHUD::DrawMorphBar()
+{
 }
 
 void AAzurukHUD::MakeUV(FCanvasIcon& Icon, FVector2D& UV0, FVector2D& UV1, uint16 U, uint16 V, uint16 UL, uint16 VL)

@@ -11,7 +11,7 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	// Don't let Azuruk Characters die
 	InitialLifeSpan = 0;
 
-	// Default Max Health
+	// Default Max GetHealth()
 	Health = 100.f;
 
 	// Configure character movement
@@ -54,7 +54,7 @@ float AAzurukBaseCharacter::TakeDamage(float Damage, struct FDamageEvent const& 
 	{
 		ModifyHealth(ActualDamage);
 
-		if (Health <= 0)
+		if (GetHealth() <= 0)
 		{
 			Die(ActualDamage, DamageEvent, EventInstigator, DamageCauser);
 		}
@@ -131,16 +131,21 @@ void AAzurukBaseCharacter::SetRagdollPhysics()
 
 void AAzurukBaseCharacter::ModifyHealth(float Amount)
 {
-	Health = FMath::IsNegativeFloat(Amount) 
+	Health = FMath::IsNegativeFloat(Amount)
 		// Heal 
 		? FMath::Min(Health - Amount, GetMaxHealth())
 		// Damage
 		: FMath::Max(Health - Amount, 0.f);
 }
 
+float AAzurukBaseCharacter::GetHealth()
+{
+	return Health;
+}
+
 float AAzurukBaseCharacter::GetMaxHealth() const
 {
-	return GetClass()->GetDefaultObject<AAzurukBaseCharacter>()->Health;
+	return GetClass()->GetDefaultObject<AAzurukBaseCharacter>()->GetHealth();
 }
 
 bool AAzurukBaseCharacter::IsAlive() const

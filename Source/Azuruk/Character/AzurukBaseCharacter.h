@@ -41,7 +41,7 @@ public:
 	virtual void Die(float KillingDamage, struct FDamageEvent const& DamageEvent, class AController* Killer, class AActor* DamageCauser);
 
 	/** Identifies if pawn is in its dying state */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Health)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	uint32 bIsDying : 1;
 
 private:
@@ -53,11 +53,10 @@ private:
 // Health
 public:
 
-	/* Health Value */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Health)
-	float Health;
-
-	/* Returns Health Value */
+	/* Return Health Value */
+	float GetHealth();
+	
+	/* Returns Max Health Value */
 	float GetMaxHealth() const;
 
 	/* check if pawn is still alive */
@@ -65,7 +64,10 @@ public:
 
 private:
 
-	/* Modify Pawns Health 
+	/* Health Value */
+	float Health;
+
+	/* Modify Pawns GetHealth() 
 	 * Use Negative Input to Heal
 	 */
 	void ModifyHealth(float Amount);

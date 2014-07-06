@@ -13,9 +13,21 @@ class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 {
 	GENERATED_UCLASS_BODY()
 
+	/* PostInitializeComponents */
+	virtual void PostInitializeComponents() OVERRIDE;
+
+	/* APawn interface */
+	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;	
+
 	/* Use object distance */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
 	float useDistance;
+
+	/* Use object distance */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
+	float morphTime;
+
+	float GetMorphTime(uint8 index);
 
 	/* Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -30,6 +42,14 @@ private:
 	/* Dynamic Mesh Features Array */
 	UPROPERTY()
 	TArray<USkeletalMeshComponent*> characterFeatures;
+
+	/* Morph Bar Times */
+	UPROPERTY()
+	TArray<float> morphTimes;
+
+	/* Active Feature */
+	UPROPERTY()
+	uint8 activeFeature;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Azuruk Properties")
 	USkeletalMesh* defaultMesh;
@@ -62,10 +82,4 @@ private:
 	void SetFeatures(uint8 index);
 	void MorphOne();
 	void MorphTwo();
-
-	/* PostInitializeComponents */
-	virtual void PostInitializeComponents() OVERRIDE;
-
-	/* APawn interface */
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;	
 };

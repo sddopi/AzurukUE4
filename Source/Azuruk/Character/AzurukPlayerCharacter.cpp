@@ -9,6 +9,10 @@ AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitial
 {
 	// Azuruk Property Defaults
 	useDistance = 100.f;
+	morphTime = 100.f;
+	activeFeature = 0;
+
+	morphTimes.Add(morphTime);
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -131,6 +135,7 @@ void AAzurukPlayerCharacter::MorphTwo()
 }
 void AAzurukPlayerCharacter::SetFeatures(uint8 index)
 {
+
 	if (Mesh->SkeletalMesh != characterFeatures[index]->SkeletalMesh)
 	{
 		Mesh->SetAnimClass(characterFeatures[index]->GetAnimInstance()->GetClass());
@@ -141,4 +146,9 @@ void AAzurukPlayerCharacter::SetFeatures(uint8 index)
 		Mesh->SetAnimClass(defaultAnimInstance);
 		Mesh->SetSkeletalMesh(defaultMesh);
 	}
+}
+
+float AAzurukPlayerCharacter::GetMorphTime(uint8 index)
+{
+	return morphTimes[index];
 }
