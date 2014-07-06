@@ -10,6 +10,7 @@ public class Azuruk : ModuleRules
             new string[] { 
                 "Azuruk",
 				"Azuruk/Character",
+                "Azuruk/Controllers",
                 "Azuruk/UI",
                 "Azuruk/Abilities",
                 "Azuruk/Effects",

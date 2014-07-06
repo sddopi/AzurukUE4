@@ -16,9 +16,22 @@ class AAzurukHUD : public AHUD
 	/* Main HUD update loop. */
 	virtual void DrawHUD() OVERRIDE;
 
-	/* Texture for HUD elements. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk HUD")
-	UTexture2D* HUDHealthAssets;
+	/* Health Bar Icons */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")
+		FCanvasIcon HealthBarBack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")
+		FCanvasIcon HealthBar;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")
+		FCanvasIcon HealthIcon;
+
+	/* Morph Bar Icons */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph HUD")
+		FCanvasIcon MorphBarBack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph HUD")
+		FCanvasIcon MorphBar;
 
 protected:
 
@@ -31,17 +44,7 @@ protected:
 	/* General offset for HUD elements. */
 	float Offset;
 
-	/* Health bar background icon. */
-	UPROPERTY()
-	FCanvasIcon HealthBarBg;
-
-	/* Health bar icon. */
-	UPROPERTY()
-	FCanvasIcon HealthBar;
-
-	/* Health icon on the health bar. */
-	UPROPERTY()
-	FCanvasIcon HealthIcon;
+	
 
 	/* Draw player's health bar. */
 	void DrawHealth();
