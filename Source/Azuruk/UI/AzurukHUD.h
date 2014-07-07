@@ -54,18 +54,12 @@ class AAzurukHUD : public AHUD
 	FCanvasComponent oneMorphBar;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
-	FCanvasComponent oneMorphBar;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
 	FCanvasComponent oneMorphPortrait;
 
 	/* Morph Bar Two Icons */
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
 	FCanvasComponent twoMorphBarBack;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
-	FCanvasComponent twoMorphBar;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
 	FCanvasComponent twoMorphBar;
