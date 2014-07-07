@@ -32,7 +32,11 @@ class AAzurukHUD : public AHUD
 	/* Main HUD update loop. */
 	virtual void DrawHUD() OVERRIDE;
 
-	/* GetHealth() Bar Icons */
+	/* Background Icon */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")
+	FCanvasComponent VitalsBack;
+
+	/* Health Bar Icons */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")
 	FCanvasComponent HealthBarBack;
 
@@ -42,12 +46,32 @@ class AAzurukHUD : public AHUD
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")
 	FCanvasComponent HealthIcon;
 
-	/* Morph Bar Icons */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph HUD")
-	FCanvasComponent MorphBarBack;
+	/* Morph Bar One Icons */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
+	FCanvasComponent oneMorphBarBack;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph HUD")
-	FCanvasComponent MorphBar;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
+	FCanvasComponent oneMorphBar;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
+	FCanvasComponent oneMorphBar;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
+	FCanvasComponent oneMorphPortrait;
+
+	/* Morph Bar Two Icons */
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
+	FCanvasComponent twoMorphBarBack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
+	FCanvasComponent twoMorphBar;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
+	FCanvasComponent twoMorphBar;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
+	FCanvasComponent twoMorphPortrait;
 
 protected:
 

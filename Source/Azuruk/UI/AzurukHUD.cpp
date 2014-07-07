@@ -43,9 +43,9 @@ void AAzurukHUD::DrawHealth()
 	FCanvasTileItem TileItem(FVector2D(HealthPosX, HealthPosY), HealthBar.HUDComponent.Texture->Resource, FVector2D(HealthBar.HUDComponent.UL * HealthAmount  * ScaleUI, HealthBar.HUDComponent.VL * ScaleUI), FLinearColor::White);
 	MakeUV(HealthBar.HUDComponent, TileItem.UV0, TileItem.UV1, HealthBar.HUDComponent.U, HealthBar.HUDComponent.V, HealthBar.HUDComponent.UL * HealthAmount, HealthBar.HUDComponent.VL);
 	TileItem.BlendMode = SE_BLEND_Translucent;
-	Canvas->DrawItem(TileItem);
+	Canvas->DrawItem(TileItem, HealthPosX + HealthBar.xPosition, HealthPosY + HealthBar.yPosition);
 	// Draw Health Icon
-	Canvas->DrawIcon(HealthIcon.HUDComponent, (HealthPosX + HealthIcon.xPosition), (HealthPosY + HealthIcon.yPosition), ScaleUI);
+	Canvas->DrawIcon(HealthIcon.HUDComponent, HealthPosX + HealthIcon.xPosition, HealthPosY + HealthIcon.yPosition, ScaleUI);
 }
 
 void AAzurukHUD::DrawMorphBar()
