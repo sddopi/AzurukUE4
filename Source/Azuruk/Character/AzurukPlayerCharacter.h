@@ -5,7 +5,75 @@
 #include "AzurukBaseCharacter.h"
 #include "AzurukPlayerCharacter.generated.h"
 
-/**
+/*
+ *
+ */
+USTRUCT()
+struct FCharacterFeatures
+{
+	GENERATED_USTRUCT_BODY()
+
+private:
+
+	UPROPERTY()
+	USkeletalMesh* featureMesh;
+
+	UPROPERTY()
+	UClass* featureAnimInstance;
+
+	UPROPERTY()
+	float morphTime;
+
+public:
+
+	/* Initialises the Feature Set */
+	void InitFeatures(USkeletalMesh* Mesh, UClass* AnimInstance)
+	{
+		featureMesh = Mesh;
+		featureAnimInstance = AnimInstance;
+	}
+	/* Sets the SkelMesh & AnimInstance on Passed Mesh */
+	void SetFeatures(USkeletalMeshComponent* PassedMesh)
+	{
+		if (this->NotNull() && morphTime > 0.0f)
+		{
+			PassedMesh->SetAnimClass(featureAnimInstance);
+			PassedMesh->SetSkeletalMesh(featureMesh);
+
+		}
+	}
+	/* Checks if passed features are the same as current */
+	bool EqualFeatures(USkeletalMeshComponent* Mesh)
+	{
+		return Mesh->SkeletalMesh == featureMesh || Mesh->GetAnimInstance()->GetClass() == featureAnimInstance;
+	}
+	/* Checks if feature is null */
+	bool NotNull()
+	{
+		return featureMesh != nullptr || featureAnimInstance != nullptr;
+	}
+
+	void DecreaseMorphTime()
+	{
+		morphTime = FMath::Min(morphTime - 1.0f, 0.0f);
+	}
+
+	void Destroy()
+	{
+		featureMesh = nullptr;
+		featureAnimInstance = nullptr;
+		morphTime = NULL;
+	}
+
+	FCharacterFeatures()
+	{
+		featureMesh = nullptr;
+		featureAnimInstance = nullptr;
+		morphTime = 100.0f;
+	}
+};
+
+/*
  * 
  */
 UCLASS()
@@ -13,21 +81,12 @@ class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 {
 	GENERATED_UCLASS_BODY()
 
-	/* PostInitializeComponents */
-	virtual void PostInitializeComponents() OVERRIDE;
-
-	/* APawn interface */
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;	
-
 	/* Use object distance */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
 	float useDistance;
 
-	/* Use object distance */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
-	float morphTime;
-
-	float GetMorphTime(uint8 index);
+	float morphDrainRate;
 
 	/* Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -37,25 +96,24 @@ class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	TSubobjectPtr<class UCameraComponent> FollowCamera;
 
+	/* PostInitializeComponents */
+	virtual void PostInitializeComponents() OVERRIDE;
+
+	/* APawn interface */
+	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;
+
+	/* */
+	FCharacterFeatures* GetCharacterFeature(uint8 index);
+
 private:
 
 	/* Dynamic Mesh Features Array */
 	UPROPERTY()
-	TArray<USkeletalMeshComponent*> characterFeatures;
-
-	/* Morph Bar Times */
-	UPROPERTY()
-	TArray<float> morphTimes;
+	TArray<FCharacterFeatures> featureArray;
 
 	/* Active Feature */
 	UPROPERTY()
-	uint8 activeFeature;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Azuruk Properties")
-	USkeletalMesh* defaultMesh;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Azuruk Properties")
-	UClass* defaultAnimInstance;
+	uint8 usableFeatures;
 
 	/* Called for forwards/backward input */
 	void MoveForward(float Value);
@@ -75,11 +133,9 @@ private:
 	/* Adds features to features array */
 	void AddFeatures(USkeletalMeshComponent* NewMesh);
 
-	/* Sets current features to new mesh
-	*
-	* MorphOne and MorphTwo call SetFeatures with Index
-	*/
+	/* Sets current features to new mesh */
 	void SetFeatures(uint8 index);
+	/* MorphOne and MorphTwo call SetFeatures with Index */
 	void MorphOne();
 	void MorphTwo();
 };

@@ -3,16 +3,24 @@
 #include "Azuruk.h"
 #include "AzurukPlayerCharacter.h"
 
+namespace EFeatureName
+{
+	enum Type
+	{
+		FeatureDefault,
+		FeatureOne,
+		FeatureTwo,
+	};
+}
+
 
 AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
 	// Azuruk Property Defaults
 	useDistance = 100.f;
-	morphTime = 100.f;
-	activeFeature = 0;
-
-	morphTimes.Add(morphTime);
+	morphDrainRate = 1.0f;
+	usableFeatures = 2;
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -34,12 +42,8 @@ AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitial
 void AAzurukPlayerCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	// Assign Default Features
-	if (Mesh->SkeletalMesh != nullptr && Mesh->GetAnimInstance() != nullptr)
-	{
-		defaultMesh = Mesh->SkeletalMesh;
-		defaultAnimInstance = Mesh->GetAnimInstance()->GetClass();
-	}
+
+	AddFeatures(Mesh);
 }
 
 void AAzurukPlayerCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -65,7 +69,6 @@ void AAzurukPlayerCharacter::MoveForward(float Amount)
 		// Find forward vector
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
 		// Get forward vector
 		const FVector Direction = FRotationMatrix(Rotation).GetUnitAxis(EAxis::X);
 		// Add movement in that direction
@@ -80,7 +83,6 @@ void AAzurukPlayerCharacter::MoveRight(float Value)
 		// Find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
 		// Get right vector 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// Add movement in that direction
@@ -113,42 +115,35 @@ AActor* AAzurukPlayerCharacter::GetClosestUse()
 
 void AAzurukPlayerCharacter::AddFeatures(USkeletalMeshComponent* NewMesh)
 {
-	if (!characterFeatures.Contains(NewMesh))
+	FCharacterFeatures tFeatures;
+	tFeatures.InitFeatures(NewMesh->SkeletalMesh, NewMesh->GetAnimInstance()->GetClass());
+
+	if (tFeatures.NotNull())
 	{
-		characterFeatures.Add(NewMesh);
+		featureArray.Add(tFeatures);
 	}
 }
 
-void AAzurukPlayerCharacter::MorphOne()
-{
-	if (characterFeatures.IsValidIndex(0))
-	{
-		SetFeatures(uint8(0));
-	}
-}
-void AAzurukPlayerCharacter::MorphTwo()
-{
-	if (characterFeatures.IsValidIndex(1))
-	{
-		SetFeatures(uint8(1));
-	}
-}
+void AAzurukPlayerCharacter::MorphOne()		{ SetFeatures(EFeatureName::FeatureOne);	}
+void AAzurukPlayerCharacter::MorphTwo()		{ SetFeatures(EFeatureName::FeatureTwo);	}
+
 void AAzurukPlayerCharacter::SetFeatures(uint8 index)
 {
-
-	if (Mesh->SkeletalMesh != characterFeatures[index]->SkeletalMesh)
+	if (featureArray.IsValidIndex(index))
 	{
-		Mesh->SetAnimClass(characterFeatures[index]->GetAnimInstance()->GetClass());
-		Mesh->SetSkeletalMesh(characterFeatures[index]->SkeletalMesh);
-	}
-	else
-	{
-		Mesh->SetAnimClass(defaultAnimInstance);
-		Mesh->SetSkeletalMesh(defaultMesh);
+		if (featureArray[index].EqualFeatures(Mesh))
+		{
+			featureArray[EFeatureName::FeatureDefault].SetFeatures(Mesh);
+			
+		}
+		else
+		{
+			featureArray[index].SetFeatures(Mesh);
+		}
 	}
 }
 
-float AAzurukPlayerCharacter::GetMorphTime(uint8 index)
+FCharacterFeatures* AAzurukPlayerCharacter::GetCharacterFeature(uint8 index)
 {
-	return morphTimes[index];
+	return &featureArray[index];
 }

@@ -5,6 +5,22 @@
 #include "GameFramework/HUD.h"
 #include "AzurukHUD.generated.h"
 
+USTRUCT()
+struct FCanvasComponent
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+	FCanvasIcon HUDComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+	float xPosition;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+	float yPosition;
+};
+
+
 /**
  * 
  */
@@ -17,21 +33,21 @@ class AAzurukHUD : public AHUD
 	virtual void DrawHUD() OVERRIDE;
 
 	/* GetHealth() Bar Icons */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GetHealth() HUD")
-		FCanvasIcon HealthBarBack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")
+	FCanvasComponent HealthBarBack;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GetHealth() HUD")
-		FCanvasIcon HealthBar;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")
+	FCanvasComponent HealthBar;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GetHealth() HUD")
-		FCanvasIcon HealthIcon;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")
+	FCanvasComponent HealthIcon;
 
 	/* Morph Bar Icons */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph HUD")
-		FCanvasIcon MorphBarBack;
+	FCanvasComponent MorphBarBack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph HUD")
-		FCanvasIcon MorphBar;
+	FCanvasComponent MorphBar;
 
 protected:
 
@@ -40,9 +56,6 @@ protected:
 
 	/* UI scaling factor for other resolutions than Full HD. */
 	float ScaleUI;
-
-	/* General offset for HUD elements. */
-	float Offset;
 
 	/* Draw player's health bar. */
 	void DrawHealth();

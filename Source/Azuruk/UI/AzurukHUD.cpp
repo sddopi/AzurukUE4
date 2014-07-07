@@ -8,7 +8,6 @@ const float AAzurukHUD::MinHudScale = 0.5f;
 AAzurukHUD::AAzurukHUD(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-	Offset = 20.0f;
 }
 
 void AAzurukHUD::DrawHUD()
@@ -35,17 +34,18 @@ void AAzurukHUD::DrawHealth()
 {
 	AAzurukPlayerCharacter* MyPawn = Cast<AAzurukPlayerCharacter>(GetOwningPawn());
 	Canvas->SetDrawColor(FColor::White);
-	const float HealthPosX = (Canvas->ClipX + HealthBarBack.UL) / 2;
-	const float HealthPosY = (Canvas->ClipY / 2) - (Offset + HealthBarBack.VL) * ScaleUI;
-	Canvas->DrawIcon(HealthBarBack, HealthPosX, HealthPosY, ScaleUI);
+	const float HealthPosX = (Canvas->ClipX + HealthBarBack.xPosition * ScaleUI);
+	const float HealthPosY = (Canvas->ClipY + HealthBarBack.yPosition * ScaleUI);
+	// Draw Health Background
+	Canvas->DrawIcon(HealthBarBack.HUDComponent, HealthPosX, HealthPosY, ScaleUI);
 	const float HealthAmount = FMath::Min(1.0f, MyPawn->GetHealth() / MyPawn->GetMaxHealth());
-
-	FCanvasTileItem TileItem(FVector2D(HealthPosX, HealthPosY), HealthBar.Texture->Resource, FVector2D(HealthBar.UL * HealthAmount  * ScaleUI, HealthBar.VL * ScaleUI), FLinearColor::White);
-	MakeUV(HealthBar, TileItem.UV0, TileItem.UV1, HealthBar.U, HealthBar.V, HealthBar.UL * HealthAmount, HealthBar.VL);
+	// Draw Health Bar
+	FCanvasTileItem TileItem(FVector2D(HealthPosX, HealthPosY), HealthBar.HUDComponent.Texture->Resource, FVector2D(HealthBar.HUDComponent.UL * HealthAmount  * ScaleUI, HealthBar.HUDComponent.VL * ScaleUI), FLinearColor::White);
+	MakeUV(HealthBar.HUDComponent, TileItem.UV0, TileItem.UV1, HealthBar.HUDComponent.U, HealthBar.HUDComponent.V, HealthBar.HUDComponent.UL * HealthAmount, HealthBar.HUDComponent.VL);
 	TileItem.BlendMode = SE_BLEND_Translucent;
 	Canvas->DrawItem(TileItem);
-
-	Canvas->DrawIcon(HealthIcon, HealthPosX + Offset * ScaleUI, HealthPosY + (HealthBar.VL - HealthIcon.VL) / 2.0f * ScaleUI, ScaleUI);
+	// Draw Health Icon
+	Canvas->DrawIcon(HealthIcon.HUDComponent, (HealthPosX + HealthIcon.xPosition), (HealthPosY + HealthIcon.yPosition), ScaleUI);
 }
 
 void AAzurukHUD::DrawMorphBar()
