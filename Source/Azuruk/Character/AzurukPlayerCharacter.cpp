@@ -8,7 +8,6 @@ AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitial
 {
 	// Azuruk Property Defaults
 	useDistance = 100.f;
-	morphDrainRate = 1.0f;
 	usableFeatures = 2;
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
@@ -28,11 +27,15 @@ AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitial
 	FollowCamera->bUseControllerViewRotation = false; // Camera does not rotate relative to arm
 }
 
-void AAzurukPlayerCharacter::PostInitializeComponents()
+void AAzurukPlayerCharacter::Tick(float DeltaTime)
 {
-	Super::PostInitializeComponents();
-
-	AddFeatures(Mesh);
+	for (UAzurukCharacterFeatures* Feature : featureArray)
+	{
+		if (Feature->ReturnFeatureTime() == 0.0f)
+		{
+			SetFeatures(featureArray.Find(Feature));
+		}
+	}
 }
 
 void AAzurukPlayerCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
@@ -79,16 +82,6 @@ void AAzurukPlayerCharacter::MoveRight(float Value)
 	}
 }
 
-void AAzurukPlayerCharacter::UseObject()
-{
-	AActor* tActor = GetClosestUse();
-
-	if (Cast<AAzurukBaseCharacter>(tActor) != nullptr && Cast<AAzurukBaseCharacter>(tActor)->bIsDying)
-	{
-		this->AddFeatures(Cast<AAzurukBaseCharacter>(tActor)->Mesh);
-	}
-}
-
 AActor* AAzurukPlayerCharacter::GetClosestUse()
 {
 	// Get an Array of usable objects
@@ -102,14 +95,21 @@ AActor* AAzurukPlayerCharacter::GetClosestUse()
 	return NULL;
 }
 
-void AAzurukPlayerCharacter::AddFeatures(USkeletalMeshComponent* NewMesh)
+void AAzurukPlayerCharacter::UseObject()
 {
-	UAzurukCharacterFeatures* tFeatures = NewObject<UAzurukCharacterFeatures>(GetTransientPackage(), UAzurukCharacterFeatures::StaticClass());
-	tFeatures->InitFeatures(NewMesh->SkeletalMesh, NewMesh->GetAnimInstance()->GetClass());
+	AActor* tActor = GetClosestUse();
 
-	if (tFeatures->NotNull())
+	if (Cast<AAzurukBaseCharacter>(tActor) != nullptr && Cast<AAzurukBaseCharacter>(tActor)->bIsDying)
 	{
-		featureArray.Add(tFeatures);
+		this->AddFeatures(Cast<AAzurukBaseCharacter>(tActor)->defaultCharacterFeature);
+	}
+}
+
+void AAzurukPlayerCharacter::AddFeatures(UAzurukCharacterFeatures* NewFeat)
+{
+	if (NewFeat->NotNull() && !featureArray.Contains(NewFeat))
+	{
+		featureArray.Add(NewFeat);
 	}
 }
 
@@ -122,12 +122,14 @@ void AAzurukPlayerCharacter::SetFeatures(uint8 index)
 	{
 		if (featureArray[index]->EqualFeatures(Mesh))
 		{
-			featureArray[EFeatureName::FeatureDefault]->SetFeatures(Mesh);
-			
+			featureArray[index]->ModifyFeatureActive(false);
+			defaultCharacterFeature->SetFeatures(Mesh);
 		}
 		else
 		{
+			featureArray[index]->ModifyFeatureActive(true);
 			featureArray[index]->SetFeatures(Mesh);
+			GetWorldTimerManager().SetTimer(featureArray[index], &UAzurukCharacterFeatures::ModifyFeatureTime, 1.0f, true);
 		}
 	}
 }

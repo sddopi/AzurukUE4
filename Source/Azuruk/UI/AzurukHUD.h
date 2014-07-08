@@ -32,7 +32,7 @@ class AAzurukHUD : public AHUD
 	/* Main HUD update loop. */
 	virtual void DrawHUD() OVERRIDE;
 
-	/* Background Icon */
+	/* Vital Background Icon */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")
 	FCanvasComponent VitalsBack;
 
@@ -53,19 +53,12 @@ class AAzurukHUD : public AHUD
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
 	FCanvasComponent MorphBar_One;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
-	FCanvasComponent MorphPortrait_One;
-
 	/* Morph Bar Two Icons */
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
 	FCanvasComponent MorphBarBack_Two;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
 	FCanvasComponent MorphBar_Two;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
-	FCanvasComponent MorphPortrait_Two;
 
 protected:
 

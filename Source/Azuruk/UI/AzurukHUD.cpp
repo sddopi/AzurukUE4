@@ -66,8 +66,10 @@ void AAzurukHUD::DrawMorphBarOne()
 {
 	// Get Player Pawn
 	AAzurukPlayerCharacter* MyPawn = Cast<AAzurukPlayerCharacter>(GetOwningPawn());
-	// Get Morph One Scale Amount
-	const float MorphAmount = FMath::Min(1.0f, MyPawn->GetHealth() / MyPawn->GetMaxHealth());
+	
+	const float MorphAmount =	MyPawn->featureArray.IsValidIndex(EFeatureName::FeatureOne) ? 
+								FMath::Min(1.0f, MyPawn->featureArray[EFeatureName::FeatureOne]->ReturnFeatureTime() / MyPawn->featureArray[EFeatureName::FeatureOne]->ReturnMaxFeatureTime())
+								: 100.0f;
 	// Set Default Positions
 	const float PosX = (Canvas->ClipX + MorphBarBack_One.xPosition * ScaleUI) / 2;
 	const float PosY = (Canvas->ClipY + MorphBarBack_One.yPosition * ScaleUI) / 2;
@@ -90,7 +92,9 @@ void AAzurukHUD::DrawMorphBarTwo()
 	// Get Player Pawn
 	AAzurukPlayerCharacter* MyPawn = Cast<AAzurukPlayerCharacter>(GetOwningPawn());
 	// Get Morph One Scale Amount
-	const float MorphAmount = FMath::Min(1.0f, MyPawn->GetHealth() / MyPawn->GetMaxHealth());
+	const float MorphAmount = MyPawn->featureArray.IsValidIndex(EFeatureName::FeatureTwo) ?
+		FMath::Min(1.0f, MyPawn->featureArray[EFeatureName::FeatureTwo]->ReturnFeatureTime() / MyPawn->featureArray[EFeatureName::FeatureTwo]->ReturnMaxFeatureTime())
+		: 100.0f;
 	// Set Default Positions
 	const float PosX = (Canvas->ClipX + MorphBarBack_Two.xPosition * ScaleUI) / 2;
 	const float PosY = (Canvas->ClipY + MorphBarBack_Two.yPosition * ScaleUI) / 2;

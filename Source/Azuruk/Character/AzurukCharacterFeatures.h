@@ -25,6 +25,21 @@ class UAzurukCharacterFeatures : public UObject
 	/* Checks if feature is null */
 	bool NotNull();
 
+	/* Return Morph Time */
+	float ReturnFeatureTime();
+
+	/* Returns Max Morph Time */
+	float ReturnMaxFeatureTime() const;
+
+	/*  */
+	void ModifyFeatureTime();
+
+	/* */
+	bool isFeatureActive();
+
+	/* */
+	void ModifyFeatureActive(bool newBool);
+
 private:
 
 	UPROPERTY()
@@ -34,6 +49,8 @@ private:
 	UClass* featureAnimInstance;
 
 	UPROPERTY()
-	float morphTime;
-	
+	float featureTime;
+
+	UPROPERTY()
+	bool featureActive;
 };

@@ -13,6 +13,7 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 
 	// Default Max GetHealth()
 	Health = 100.f;
+	maxMorphTime = 30.f;
 
 	// Configure character movement
 	CharacterMovement->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -29,16 +30,13 @@ void AAzurukBaseCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	defaultCharacterFeature = NewObject<UAzurukCharacterFeatures>(GetTransientPackage(), UAzurukCharacterFeatures::StaticClass());
+	defaultCharacterFeature->InitFeatures(Mesh->SkeletalMesh, Mesh->GetAnimInstance()->GetClass());
+
 	if (Role = ROLE_Authority)
 	{
 		Health = GetMaxHealth();
 	}
-}
-
-void AAzurukBaseCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 float AAzurukBaseCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)

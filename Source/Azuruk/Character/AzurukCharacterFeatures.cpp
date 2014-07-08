@@ -8,7 +8,8 @@ UAzurukCharacterFeatures::UAzurukCharacterFeatures(const class FPostConstructIni
 {
 	featureMesh = nullptr;
 	featureAnimInstance = nullptr;
-	morphTime = 100.0f;
+	featureTime = 30.0f;
+	featureActive = false;
 }
 
 void UAzurukCharacterFeatures::InitFeatures(USkeletalMesh* Mesh, UClass* AnimInstance)
@@ -19,11 +20,10 @@ void UAzurukCharacterFeatures::InitFeatures(USkeletalMesh* Mesh, UClass* AnimIns
 
 void UAzurukCharacterFeatures::SetFeatures(USkeletalMeshComponent* PassedMesh)
 {
-	if (this->NotNull() && morphTime > 0.0f)
+	if (this->NotNull() && featureTime > 0.0f)
 	{
 		PassedMesh->SetAnimClass(featureAnimInstance);
 		PassedMesh->SetSkeletalMesh(featureMesh);
-
 	}
 }
 
@@ -37,4 +37,35 @@ bool UAzurukCharacterFeatures::NotNull()
 	return featureMesh != nullptr || featureAnimInstance != nullptr;
 }
 
+float UAzurukCharacterFeatures::ReturnFeatureTime()
+{
+	return featureTime;
+}
+
+float UAzurukCharacterFeatures::ReturnMaxFeatureTime() const
+{
+	return GetClass()->GetDefaultObject<UAzurukCharacterFeatures>()->ReturnFeatureTime();
+}
+
+void UAzurukCharacterFeatures::ModifyFeatureTime()
+{
+	if (featureActive)
+	{
+		featureTime = FMath::Max(featureTime - 1.0f, 0.0f);
+	}
+	else
+	{
+		featureTime = FMath::Min(featureTime + 1.0f, ReturnMaxFeatureTime());
+	}
+}
+
+bool UAzurukCharacterFeatures::isFeatureActive()
+{
+	return featureActive;
+}
+
+void UAzurukCharacterFeatures::ModifyFeatureActive(bool newBool)
+{
+	featureActive = newBool;
+}
 

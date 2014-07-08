@@ -19,7 +19,14 @@ public:
 	/* PostInitializeComponents */
 	virtual void PostInitializeComponents() OVERRIDE;
 
-	virtual void Tick(float DeltaTime) OVERRIDE;
+//////////////////////////////////////////////////////////////////////////
+// Azuruk Character Features
+
+	UPROPERTY()
+	UAzurukCharacterFeatures* defaultCharacterFeature;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
+	float maxMorphTime;
 
 //////////////////////////////////////////////////////////////////////////
 // Damage and Death
