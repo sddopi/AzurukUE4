@@ -5,73 +5,15 @@
 #include "AzurukBaseCharacter.h"
 #include "AzurukPlayerCharacter.generated.h"
 
-/*
- *
- */
-USTRUCT()
-struct FCharacterFeatures
+namespace EFeatureName
 {
-	GENERATED_USTRUCT_BODY()
-
-private:
-
-	UPROPERTY()
-	USkeletalMesh* featureMesh;
-
-	UPROPERTY()
-	UClass* featureAnimInstance;
-
-	UPROPERTY()
-	float morphTime;
-
-public:
-
-	/* Initialises the Feature Set */
-	void InitFeatures(USkeletalMesh* Mesh, UClass* AnimInstance)
+	enum Type
 	{
-		featureMesh = Mesh;
-		featureAnimInstance = AnimInstance;
-	}
-	/* Sets the SkelMesh & AnimInstance on Passed Mesh */
-	void SetFeatures(USkeletalMeshComponent* PassedMesh)
-	{
-		if (this->NotNull() && morphTime > 0.0f)
-		{
-			PassedMesh->SetAnimClass(featureAnimInstance);
-			PassedMesh->SetSkeletalMesh(featureMesh);
-
-		}
-	}
-	/* Checks if passed features are the same as current */
-	bool EqualFeatures(USkeletalMeshComponent* Mesh)
-	{
-		return Mesh->SkeletalMesh == featureMesh || Mesh->GetAnimInstance()->GetClass() == featureAnimInstance;
-	}
-	/* Checks if feature is null */
-	bool NotNull()
-	{
-		return featureMesh != nullptr || featureAnimInstance != nullptr;
-	}
-
-	void DecreaseMorphTime()
-	{
-		morphTime = FMath::Min(morphTime - 1.0f, 0.0f);
-	}
-
-	void Destroy()
-	{
-		featureMesh = nullptr;
-		featureAnimInstance = nullptr;
-		morphTime = NULL;
-	}
-
-	FCharacterFeatures()
-	{
-		featureMesh = nullptr;
-		featureAnimInstance = nullptr;
-		morphTime = 100.0f;
-	}
-};
+		FeatureDefault,
+		FeatureOne,
+		FeatureTwo,
+	};
+}
 
 /*
  * 
@@ -102,14 +44,11 @@ class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 	/* APawn interface */
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;
 
-	/* */
-	FCharacterFeatures* GetCharacterFeature(uint8 index);
-
 private:
 
 	/* Dynamic Mesh Features Array */
 	UPROPERTY()
-	TArray<FCharacterFeatures> featureArray;
+	TArray<UAzurukCharacterFeatures*> featureArray;
 
 	/* Active Feature */
 	UPROPERTY()

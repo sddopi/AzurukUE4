@@ -3,17 +3,6 @@
 #include "Azuruk.h"
 #include "AzurukPlayerCharacter.h"
 
-namespace EFeatureName
-{
-	enum Type
-	{
-		FeatureDefault,
-		FeatureOne,
-		FeatureTwo,
-	};
-}
-
-
 AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
@@ -115,10 +104,10 @@ AActor* AAzurukPlayerCharacter::GetClosestUse()
 
 void AAzurukPlayerCharacter::AddFeatures(USkeletalMeshComponent* NewMesh)
 {
-	FCharacterFeatures tFeatures;
-	tFeatures.InitFeatures(NewMesh->SkeletalMesh, NewMesh->GetAnimInstance()->GetClass());
+	UAzurukCharacterFeatures* tFeatures = NewObject<UAzurukCharacterFeatures>(GetTransientPackage(), UAzurukCharacterFeatures::StaticClass());
+	tFeatures->InitFeatures(NewMesh->SkeletalMesh, NewMesh->GetAnimInstance()->GetClass());
 
-	if (tFeatures.NotNull())
+	if (tFeatures->NotNull())
 	{
 		featureArray.Add(tFeatures);
 	}
@@ -131,19 +120,14 @@ void AAzurukPlayerCharacter::SetFeatures(uint8 index)
 {
 	if (featureArray.IsValidIndex(index))
 	{
-		if (featureArray[index].EqualFeatures(Mesh))
+		if (featureArray[index]->EqualFeatures(Mesh))
 		{
-			featureArray[EFeatureName::FeatureDefault].SetFeatures(Mesh);
+			featureArray[EFeatureName::FeatureDefault]->SetFeatures(Mesh);
 			
 		}
 		else
 		{
-			featureArray[index].SetFeatures(Mesh);
+			featureArray[index]->SetFeatures(Mesh);
 		}
 	}
-}
-
-FCharacterFeatures* AAzurukPlayerCharacter::GetCharacterFeature(uint8 index)
-{
-	return &featureArray[index];
 }

@@ -5,6 +5,7 @@
 
 const float AAzurukHUD::MinHudScale = 0.5f;
 
+
 AAzurukHUD::AAzurukHUD(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
@@ -24,33 +25,89 @@ void AAzurukHUD::DrawHUD()
 
 	if (MyPawn && MyPawn->IsAlive())
 	{
+		// Draw Vitals Background
+		Canvas->DrawIcon(VitalsBack.HUDComponent, (Canvas->ClipX + VitalsBack.xPosition * ScaleUI) / 2, (Canvas->ClipY + VitalsBack.yPosition * ScaleUI) / 2, ScaleUI);
+		// Draw Health Bar
 		DrawHealth();
-		DrawMorphBar();
+		// Draw Morph Bar One
+		DrawMorphBarOne();
+		// Draw Morph Bar Two
+		DrawMorphBarTwo();
 	}
 	
 }
 
 void AAzurukHUD::DrawHealth()
 {
+	// Get Player Pawn
 	AAzurukPlayerCharacter* MyPawn = Cast<AAzurukPlayerCharacter>(GetOwningPawn());
-	Canvas->SetDrawColor(FColor::White);
-	const float HealthPosX = (Canvas->ClipX + HealthBarBack.xPosition * ScaleUI);
-	const float HealthPosY = (Canvas->ClipY + HealthBarBack.yPosition * ScaleUI);
-	// Draw Health Background
-	Canvas->DrawIcon(HealthBarBack.HUDComponent, HealthPosX, HealthPosY, ScaleUI);
+	// Get Player Health Scale Amount
 	const float HealthAmount = FMath::Min(1.0f, MyPawn->GetHealth() / MyPawn->GetMaxHealth());
+	// Set Default Positions
+	const float PosX = (Canvas->ClipX + HealthBarBack.xPosition * ScaleUI) / 2;
+	const float PosY = (Canvas->ClipY + HealthBarBack.yPosition * ScaleUI) / 2;
+	// Draw Health Background
+	Canvas->DrawIcon(HealthBarBack.HUDComponent, PosX, PosY, ScaleUI);
 	// Draw Health Bar
-	FCanvasTileItem TileItem(FVector2D(HealthPosX, HealthPosY), HealthBar.HUDComponent.Texture->Resource, FVector2D(HealthBar.HUDComponent.UL * HealthAmount  * ScaleUI, HealthBar.HUDComponent.VL * ScaleUI), FLinearColor::White);
-	MakeUV(HealthBar.HUDComponent, TileItem.UV0, TileItem.UV1, HealthBar.HUDComponent.U, HealthBar.HUDComponent.V, HealthBar.HUDComponent.UL * HealthAmount, HealthBar.HUDComponent.VL);
+	FCanvasTileItem TileItem(FVector2D(PosX + HealthBar.xPosition * ScaleUI, PosY + HealthBar.yPosition * ScaleUI),
+							 HealthBar.HUDComponent.Texture->Resource, 
+							 FVector2D(HealthBar.HUDComponent.UL * HealthAmount * ScaleUI, HealthBar.HUDComponent.VL * ScaleUI), 
+							 FLinearColor::White);
+	MakeUV(HealthBar.HUDComponent, TileItem.UV0, TileItem.UV1, 
+		   HealthBar.HUDComponent.U, HealthBar.HUDComponent.V, 
+		   HealthBar.HUDComponent.UL * HealthAmount, HealthBar.HUDComponent.VL);
 	TileItem.BlendMode = SE_BLEND_Translucent;
-	Canvas->DrawItem(TileItem, HealthPosX + HealthBar.xPosition, HealthPosY + HealthBar.yPosition);
+	Canvas->DrawItem(TileItem);
 	// Draw Health Icon
-	Canvas->DrawIcon(HealthIcon.HUDComponent, HealthPosX + HealthIcon.xPosition, HealthPosY + HealthIcon.yPosition, ScaleUI);
+	Canvas->DrawIcon(HealthIcon.HUDComponent, PosX + HealthIcon.xPosition * ScaleUI, PosY + HealthIcon.yPosition * ScaleUI, ScaleUI);
 }
 
-void AAzurukHUD::DrawMorphBar()
+void AAzurukHUD::DrawMorphBarOne()
 {
+	// Get Player Pawn
+	AAzurukPlayerCharacter* MyPawn = Cast<AAzurukPlayerCharacter>(GetOwningPawn());
+	// Get Morph One Scale Amount
+	const float MorphAmount = FMath::Min(1.0f, MyPawn->GetHealth() / MyPawn->GetMaxHealth());
+	// Set Default Positions
+	const float PosX = (Canvas->ClipX + MorphBarBack_One.xPosition * ScaleUI) / 2;
+	const float PosY = (Canvas->ClipY + MorphBarBack_One.yPosition * ScaleUI) / 2;
+	// Draw Morph Background
+	Canvas->DrawIcon(MorphBarBack_One.HUDComponent, PosX, PosY, ScaleUI);
+	// Draw Morph Bar
+	FCanvasTileItem TileItem(FVector2D(PosX + MorphBar_One.xPosition * ScaleUI, PosY + MorphBar_One.yPosition * ScaleUI),
+							 MorphBar_One.HUDComponent.Texture->Resource,
+							 FVector2D(MorphBar_One.HUDComponent.UL * MorphAmount * ScaleUI, MorphBar_One.HUDComponent.VL * ScaleUI),
+							 FLinearColor::White);
+	MakeUV(MorphBar_One.HUDComponent, TileItem.UV0, TileItem.UV1,
+		   MorphBar_One.HUDComponent.U, MorphBar_One.HUDComponent.V,
+		   MorphBar_One.HUDComponent.UL * MorphAmount, MorphBar_One.HUDComponent.VL);
+	TileItem.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TileItem);
 }
+
+void AAzurukHUD::DrawMorphBarTwo()
+{
+	// Get Player Pawn
+	AAzurukPlayerCharacter* MyPawn = Cast<AAzurukPlayerCharacter>(GetOwningPawn());
+	// Get Morph One Scale Amount
+	const float MorphAmount = FMath::Min(1.0f, MyPawn->GetHealth() / MyPawn->GetMaxHealth());
+	// Set Default Positions
+	const float PosX = (Canvas->ClipX + MorphBarBack_Two.xPosition * ScaleUI) / 2;
+	const float PosY = (Canvas->ClipY + MorphBarBack_Two.yPosition * ScaleUI) / 2;
+	// Draw Morph Background
+	Canvas->DrawIcon(MorphBarBack_Two.HUDComponent, PosX, PosY, ScaleUI);
+	// Draw Morph Bar
+	FCanvasTileItem TileItem(FVector2D(PosX + MorphBar_Two.xPosition * ScaleUI, PosY + MorphBar_Two.yPosition * ScaleUI),
+							 MorphBar_Two.HUDComponent.Texture->Resource,
+							 FVector2D(MorphBar_Two.HUDComponent.UL * MorphAmount * ScaleUI, MorphBar_Two.HUDComponent.VL * ScaleUI),
+							 FLinearColor::White);
+	MakeUV(MorphBar_Two.HUDComponent, TileItem.UV0, TileItem.UV1,
+		   MorphBar_Two.HUDComponent.U, MorphBar_Two.HUDComponent.V,
+		   MorphBar_Two.HUDComponent.UL * MorphAmount, MorphBar_Two.HUDComponent.VL);
+	TileItem.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TileItem);
+}
+
 
 void AAzurukHUD::MakeUV(FCanvasIcon& Icon, FVector2D& UV0, FVector2D& UV1, uint16 U, uint16 V, uint16 UL, uint16 VL)
 {

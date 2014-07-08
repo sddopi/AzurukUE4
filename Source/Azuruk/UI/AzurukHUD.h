@@ -48,24 +48,24 @@ class AAzurukHUD : public AHUD
 
 	/* Morph Bar One Icons */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
-	FCanvasComponent oneMorphBarBack;
+	FCanvasComponent MorphBarBack_One;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
-	FCanvasComponent oneMorphBar;
+	FCanvasComponent MorphBar_One;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph One HUD")
-	FCanvasComponent oneMorphPortrait;
+	FCanvasComponent MorphPortrait_One;
 
 	/* Morph Bar Two Icons */
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
-	FCanvasComponent twoMorphBarBack;
+	FCanvasComponent MorphBarBack_Two;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
-	FCanvasComponent twoMorphBar;
+	FCanvasComponent MorphBar_Two;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morph Two HUD")
-	FCanvasComponent twoMorphPortrait;
+	FCanvasComponent MorphPortrait_Two;
 
 protected:
 
@@ -79,7 +79,8 @@ protected:
 	void DrawHealth();
 
 	/* Draw player's morph bars */
-	void DrawMorphBar();
+	void DrawMorphBarOne();
+	void DrawMorphBarTwo();
 
 	void MakeUV(FCanvasIcon&, FVector2D&, FVector2D&, uint16, uint16, uint16, uint16);
 	
