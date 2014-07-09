@@ -64,6 +64,11 @@ bool UAzurukCharacterFeatures::isFeatureActive()
 	return featureActive;
 }
 
+bool UAzurukCharacterFeatures::isFeatureDepleted()
+{
+	return featureTime == 0.0f;
+}
+
 void UAzurukCharacterFeatures::ModifyFeatureActive(bool newBool)
 {
 	featureActive = newBool;

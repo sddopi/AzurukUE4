@@ -31,7 +31,7 @@ void AAzurukPlayerCharacter::Tick(float DeltaTime)
 {
 	for (UAzurukCharacterFeatures* Feature : featureArray)
 	{
-		if (Feature->ReturnFeatureTime() == 0.0f)
+		if (Feature->isFeatureDepleted())
 		{
 			SetFeatures(featureArray.Find(Feature));
 		}

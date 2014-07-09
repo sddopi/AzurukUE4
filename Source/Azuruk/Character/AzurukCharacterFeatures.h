@@ -38,6 +38,9 @@ class UAzurukCharacterFeatures : public UObject
 	bool isFeatureActive();
 
 	/* */
+	bool isFeatureDepleted();
+
+	/* */
 	void ModifyFeatureActive(bool newBool);
 
 private:
