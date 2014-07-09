@@ -30,8 +30,11 @@ void AAzurukBaseCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	defaultCharacterFeature = NewObject<UAzurukCharacterFeatures>(GetTransientPackage(), UAzurukCharacterFeatures::StaticClass());
-	defaultCharacterFeature->InitFeatures(Mesh->SkeletalMesh, Mesh->GetAnimInstance()->GetClass());
+	if (Mesh->SkeletalMesh && Mesh->GetAnimInstance())
+	{
+		defaultCharacterFeature = NewObject<UAzurukCharacterFeatures>(GetTransientPackage(), UAzurukCharacterFeatures::StaticClass());
+		defaultCharacterFeature->InitFeatures(Mesh->SkeletalMesh, Mesh->GetAnimInstance()->GetClass());
+	}	
 
 	if (Role = ROLE_Authority)
 	{
