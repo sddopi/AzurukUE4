@@ -13,9 +13,9 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	// Don't let Azuruk Characters die
 	InitialLifeSpan = 0;
 
-	// Default Max GetHealth()
+	// Azuruk Defaults
 	Health = 100.f;
-	maxMorphTime = 30.f;
+	maxMorphTime = 20.f;
 
 	// Configure character movement
 	CharacterMovement->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -30,8 +30,7 @@ void AAzurukBaseCharacter::PostInitializeComponents()
 
 	if (Mesh->SkeletalMesh && Mesh->GetAnimInstance())
 	{
-		defaultCharacterFeature = NewObject<UAzurukCharacterFeatures>(GetTransientPackage(), UAzurukCharacterFeatures::StaticClass());
-		defaultCharacterFeature->InitFeatures(Mesh->SkeletalMesh, Mesh->GetAnimInstance()->GetClass());
+		defaultCharacterFeature = NewObject<UAzurukCharacterFeatures>(this, UAzurukCharacterFeatures::StaticClass());
 	}	
 
 	if (Role = ROLE_Authority)
@@ -39,6 +38,41 @@ void AAzurukBaseCharacter::PostInitializeComponents()
 		Health = GetMaxHealth();
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Animations
+
+float AAzurukBaseCharacter::PlayAnimMontage(class UAnimMontage* AnimMontage, float InPlayRate, FName StartSectionName)
+{
+	USkeletalMeshComponent* UseMesh = Mesh;
+	if (AnimMontage && UseMesh && UseMesh->AnimScriptInstance)
+	{
+		return UseMesh->AnimScriptInstance->Montage_Play(AnimMontage, InPlayRate);
+	}
+	return 0.0f;
+}
+
+void AAzurukBaseCharacter::StopAnimMontage(class UAnimMontage* AnimMontage)
+{
+	USkeletalMeshComponent* UseMesh = Mesh;
+	if (AnimMontage && UseMesh && UseMesh->AnimScriptInstance &&
+		UseMesh->AnimScriptInstance->Montage_IsPlaying(AnimMontage))
+	{
+		UseMesh->AnimScriptInstance->Montage_Stop(AnimMontage->BlendOutTime);
+	}
+}
+
+void AAzurukBaseCharacter::StopAllAnimMontages()
+{
+	USkeletalMeshComponent* UseMesh = Mesh;
+	if (UseMesh && UseMesh->AnimScriptInstance)
+	{
+		UseMesh->AnimScriptInstance->Montage_Stop(0.0f);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Damage and Death
 
 float AAzurukBaseCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
 {
@@ -127,6 +161,9 @@ void AAzurukBaseCharacter::SetRagdollPhysics()
 		CharacterMovement->SetComponentTickEnabled(false);
 	}	
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Health
 
 void AAzurukBaseCharacter::ModifyHealth(float Amount)
 {

@@ -6,25 +6,21 @@
 UAzurukCharacterFeatures::UAzurukCharacterFeatures(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-	featureMesh = nullptr;
-	featureAnimInstance = nullptr;
-	featureTime = 30.0f;
-	featureActive = false;
-}
+	AAzurukBaseCharacter* outerChar = Cast<AAzurukBaseCharacter>(GetOuter());
 
-void UAzurukCharacterFeatures::InitFeatures(USkeletalMesh* Mesh, UClass* AnimInstance)
-{
-	featureMesh = Mesh;
-	featureAnimInstance = AnimInstance;
+	if (outerChar)
+	{
+		featureMesh = outerChar->Mesh->SkeletalMesh;
+		featureAnimInstance = outerChar->Mesh->GetAnimInstance()->GetClass();
+		featureTime = outerChar->maxMorphTime;
+		featureActive = false;
+	}
 }
 
 void UAzurukCharacterFeatures::SetFeatures(USkeletalMeshComponent* PassedMesh)
 {
-	if (this->NotNull() && featureTime > 0.0f)
-	{
-		PassedMesh->SetAnimClass(featureAnimInstance);
-		PassedMesh->SetSkeletalMesh(featureMesh);
-	}
+	PassedMesh->SetAnimClass(featureAnimInstance);
+	PassedMesh->SetSkeletalMesh(featureMesh);
 }
 
 bool UAzurukCharacterFeatures::EqualFeatures(USkeletalMeshComponent* Mesh)
