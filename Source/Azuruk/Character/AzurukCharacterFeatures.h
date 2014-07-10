@@ -12,9 +12,6 @@ UCLASS()
 class UAzurukCharacterFeatures : public UObject
 {
 	GENERATED_UCLASS_BODY()
-	
-	/* Initialises the Feature Set */
-	void InitFeatures(USkeletalMesh* Mesh, UClass* AnimInstance);
 
 	/* Sets the SkelMesh & AnimInstance on Passed Mesh */
 	void SetFeatures(USkeletalMeshComponent* PassedMesh);
@@ -43,7 +40,7 @@ class UAzurukCharacterFeatures : public UObject
 	/* */
 	void ModifyFeatureActive(bool newBool);
 
-private:
+protected:
 
 	UPROPERTY()
 	USkeletalMesh* featureMesh;
@@ -51,7 +48,7 @@ private:
 	UPROPERTY()
 	UClass* featureAnimInstance;
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Character Features")
 	float featureTime;
 
 	UPROPERTY()

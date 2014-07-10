@@ -11,8 +11,18 @@ namespace EFeatureName
 	{
 		FeatureOne,
 		FeatureTwo,
+		FeatureDefault,
 	};
 }
+
+UENUM()
+enum ECharacterState
+{
+	IDLE,
+	COLLECTING,
+	MORPHING,
+};
+
 
 /*
  * 
@@ -21,10 +31,6 @@ UCLASS()
 class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 {
 	GENERATED_UCLASS_BODY()
-
-	/* Use object distance */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
-	float useDistance;
 
 	/* Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -40,21 +46,42 @@ class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 	/* APawn interface */
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;
 
-	/* Dynamic Mesh Features Array */
+//////////////////////////////////////////////////////////////////////////
+// Azuruk Properties
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = Animation)
+	UAnimMontage* DNAAnim;
+
+	/*  */
 	UPROPERTY()
-	TArray<UAzurukCharacterFeatures*> featureArray;
+	TEnumAsByte<enum ECharacterState> characterState;
+
+//////////////////////////////////////////////////////////////////////////
+// Movement
 
 private:
 
-	/* Active Feature */
-	UPROPERTY()
-	uint8 usableFeatures;
-
 	/* Called for forwards/backward input */
-	void MoveForward(float Value);
+	void MoveForward(float Amount);
 
 	/* Called for side to side input */
-	void MoveRight(float Value);
+	void MoveRight(float Amount);
+
+//////////////////////////////////////////////////////////////////////////
+// Use Objects
+
+public:
+
+	/* Use object distance */
+	UPROPERTY(EditDefaultsOnly, Category = "Azuruk Properties")
+	float useDistance;
+
+private:
+
+	UPROPERTY()
+	AActor* usedActor;
 
 	/* Called for collecting creature DNA */
 	void UseObject();
@@ -65,12 +92,55 @@ private:
 	*/
 	AActor* GetClosestUse();
 
+	
+
+//////////////////////////////////////////////////////////////////////////
+// Morphing
+
+public:
+
+	/* Dynamic Mesh Features Array */
+	UPROPERTY()
+	TArray<UAzurukCharacterFeatures*> featureArray;
+
+private:
+
+	/*  */
+	UPROPERTY()
+	uint8 inputFeature;
+
+	/* Max Features */
+	UPROPERTY()
+	uint8 maxFeatures;
+
+	/* Starts DNA Collection */
+	void StartDNACollect();
+
+	/**/
+	void StopDNACollect();
+
+	/*  */
+	bool CanCollectDNA();
+
 	/* Adds features to features array */
 	void AddFeatures(UAzurukCharacterFeatures* NewFeat);
 
-	/* Sets current features to new mesh */
-	void SetFeatures(uint8 index);
 	/* MorphOne and MorphTwo call SetFeatures with Index */
 	void MorphOne();
 	void MorphTwo();
+
+	/*  */
+	void StartMorph(uint8 index);
+
+	/*  */
+	void StopMorph();
+
+	/*  */
+	bool CanMorph();
+
+	/* Sets current features to new mesh */
+	void SetFeatures(uint8 index);
+
+	/*  */
+	void CheckActionInterupt();
 };

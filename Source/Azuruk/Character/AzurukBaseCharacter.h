@@ -20,13 +20,32 @@ public:
 	virtual void PostInitializeComponents() OVERRIDE;
 
 //////////////////////////////////////////////////////////////////////////
-// Azuruk Character Features
+// Azuruk Properties
 
 	UPROPERTY()
 	UAzurukCharacterFeatures* defaultCharacterFeature;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Azuruk Properties")
+	UPROPERTY(EditDefaultsOnly, Category = "Azuruk Properties")
 	float maxMorphTime;
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = Animation)
+	UAnimMontage* MorphAnim;	
+
+//////////////////////////////////////////////////////////////////////////
+// Animations
+
+public:
+	
+	/* play anim montage */
+	virtual float PlayAnimMontage(class UAnimMontage* AnimMontage, float InPlayRate = 1.f, FName StartSectionName = NAME_None) OVERRIDE;
+
+	/* stop playing montage */
+	virtual void StopAnimMontage(class UAnimMontage* AnimMontage) OVERRIDE;
+
+	/* stop playing all montages */
+	void StopAllAnimMontages();
 
 //////////////////////////////////////////////////////////////////////////
 // Damage and Death
@@ -80,16 +99,13 @@ private:
 	void ModifyHealth(float Amount);
 
 //////////////////////////////////////////////////////////////////////////
-// Managers
+// Abilities
+
 public:
 
 	/* Ability manager */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Componenets)
 	TSubclassOf<class UAzurukAbilityManager> AbilityManager;
-
-//////////////////////////////////////////////////////////////////////////
-// Ability buttons
-public:
 
 	/* Button one */
 	UFUNCTION()
