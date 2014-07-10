@@ -80,20 +80,52 @@ private:
 	void ModifyHealth(float Amount);
 
 //////////////////////////////////////////////////////////////////////////
-// Managers
+// Abilities
+
 public:
 
-	/* Ability manager */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Componenets)
-	TSubclassOf<class UAzurukAbilityManager> AbilityManager;
+	/* Ability list */
+	UPROPERTY(Transient, Replicated)
+	TArray<class AAzurukAbilityBase*> Abilities;
+
+	/**
+	* add ability to pawn
+	*
+	* @param Ability Ability to add.
+	*/
+	void AddAbility(class AAzurukAbilityBase* Ability);
+
+	/**
+	* remove ability from pawn
+	*
+	* @param Ability Ability to remove.
+	*/
+	void RemoveAbility(class AAzurukAbilityBase* Ability);
+
+	/**
+	* Find in pawn
+	*
+	* @param AbilityClass	Class of ability to find.
+	*/
+	class AAzurukAbilityBase* FindAbility(TSubclassOf<class AAzurukAbilityBase> AbilityClass);
+
+	/**
+	* find ability that is bound to specific key
+	* 
+	* @param KeyBinding key ability is bound to
+	*/
+	class AAzurukAbilityBase* FindAbilityBoundToKey(FString KeyBinding);
 
 //////////////////////////////////////////////////////////////////////////
-// Ability buttons
+// Input
+
 public:
 
+	/** setup pawn specific input handlers */
+	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;
+
 	/* Button one */
-	UFUNCTION()
-	void ActionButtonOne();
-	UFUNCTION()
-	void ActionButtonOneReleased();
+	void AbilityButtonOne();
+
+	void AbilityButtonOneReleased();
 };

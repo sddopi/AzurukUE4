@@ -18,7 +18,7 @@ enum ECastType
  * 
  */
 UCLASS(BlueprintType, Blueprintable)
-class UAzurukAbilityBase : public UObject
+class AAzurukAbilityBase : public AActor
 {
 	GENERATED_UCLASS_BODY()
 
@@ -27,8 +27,27 @@ class UAzurukAbilityBase : public UObject
 
 	virtual class UWorld* GetWorld() const OVERRIDE;
 
+	//////////////////////////////////////////////////////////////////////////
+	// Input
+
 	virtual void InputPressed();
 	virtual void InputReleased();
+
+	UPROPERTY(EditAnywhere, Category = "Ability Properties")
+		FString KeyBinding;
+
+	void SetKeyBinding(FString NewKeyBinding);
+
+	FString GetKeyBinding();
+
+	//////////////////////////////////////////////////////////////////////////
+	// Ability Manager
+
+	/* ability was added to pawn */
+	virtual void OnAddAbility(AAzurukBaseCharacter* NewOwner);
+
+	/* ability removed from pawn */
+	virtual void OnRemoveAbility();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ability|Events")
 		void OnAbilityStart();
@@ -39,14 +58,13 @@ class UAzurukAbilityBase : public UObject
 	UFUNCTION(BlueprintImplementableEvent, Category = "Ability|Events")
 		void OnAbilityInitialized();
 
-	virtual void Initialize(APawn* owner, AController* instigator);
+	virtual void Initialize(APawn* owner, APawn* instigator);
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Ability Properties")
 		TEnumAsByte<ECastType> AbilityCastType;
 
-	void FORCEINLINE SetAbilityOwner(APawn* Owner) { AbilityOwner = Owner; };
-	void FORCEINLINE SetInstigator(AController* instigator) { Instigator = instigator; };
+	void  SetAbilityOwner(APawn* Owner);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Ability Properties")
@@ -63,9 +81,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Ability")
 		APawn* AbilityOwner;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Ability")
-		AController* Instigator;
 
 	bool IsAbilityInitialized;
 

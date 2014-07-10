@@ -4,7 +4,7 @@
 #include "AzurukAbilityBase.h"
 
 
-UAzurukAbilityBase::UAzurukAbilityBase(const class FPostConstructInitializeProperties& PCIP)
+AAzurukAbilityBase::AAzurukAbilityBase(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
 	isOnCooldown = false;
@@ -12,7 +12,7 @@ UAzurukAbilityBase::UAzurukAbilityBase(const class FPostConstructInitializePrope
 	isCasted = false;
 }
 
-void UAzurukAbilityBase::Tick(float DeltaTime)
+void AAzurukAbilityBase::Tick(float DeltaTime)
 {
 	if (isOnCooldown)
 	{
@@ -56,7 +56,7 @@ void UAzurukAbilityBase::Tick(float DeltaTime)
 	}
 }
 
-bool UAzurukAbilityBase::IsTickable() const
+bool AAzurukAbilityBase::IsTickable() const
 {
 	if (AbilityOwner)
 	{
@@ -69,7 +69,30 @@ bool UAzurukAbilityBase::IsTickable() const
 	return false;
 }
 
-UWorld* UAzurukAbilityBase::GetWorld() const
+//////////////////////////////////////////////////////////////////////////
+// Ability Manager
+
+void AAzurukAbilityBase::OnAddAbility(AAzurukBaseCharacter* NewOwner)
+{
+	SetAbilityOwner(NewOwner);
+}
+
+void AAzurukAbilityBase::OnRemoveAbility()
+{
+	SetAbilityOwner(NULL);
+}
+
+void AAzurukAbilityBase::SetAbilityOwner(APawn* NewOwner)
+{
+	if (NewOwner != AbilityOwner)
+	{
+		Instigator = NewOwner;
+		AbilityOwner = NewOwner;
+		SetOwner(NewOwner);
+	}
+}
+
+UWorld* AAzurukAbilityBase::GetWorld() const
 {
 	if (!AbilityOwner)
 		return NULL;
@@ -77,7 +100,7 @@ UWorld* UAzurukAbilityBase::GetWorld() const
 	return World ? World : nullptr;
 }
 
-void UAzurukAbilityBase::Initialize(APawn* owner, AController* instigator)
+void AAzurukAbilityBase::Initialize(APawn* owner, APawn* instigator)
 {
 	AbilityOwner = owner;
 	Instigator = instigator;
@@ -95,7 +118,10 @@ void UAzurukAbilityBase::Initialize(APawn* owner, AController* instigator)
 	IsAbilityInitialized = false;
 }
 
-void UAzurukAbilityBase::InputPressed()
+//////////////////////////////////////////////////////////////////////////
+// Input
+
+void AAzurukAbilityBase::InputPressed()
 {
 	if (IsAbilityInitialized)
 	{
@@ -121,11 +147,25 @@ void UAzurukAbilityBase::InputPressed()
 	}
 }
 
-void UAzurukAbilityBase::InputReleased()
+void AAzurukAbilityBase::InputReleased()
 {
 	if (AbilityCastType == ECastType::Channeled)
 	{
 		OnAbilityStop();
 		isChanneled = false;
 	}
+}
+
+void AAzurukAbilityBase::SetKeyBinding(FString NewKeyBinding)
+{
+	if (NewKeyBinding != KeyBinding &&
+		NewKeyBinding != NULL)
+	{
+		KeyBinding = NewKeyBinding;
+	}
+}
+
+FString AAzurukAbilityBase::GetKeyBinding()
+{
+	return KeyBinding;
 }

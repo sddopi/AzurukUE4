@@ -4,33 +4,33 @@
 #include "AzurukAbilityTest.h"
 
 
-UAzurukAbilityTest::UAzurukAbilityTest(const class FPostConstructInitializeProperties& PCIP)
+AAzurukAbilityTest::AAzurukAbilityTest(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
 
 }
 
-void UAzurukAbilityTest::Tick(float DeltaTime)
+void AAzurukAbilityTest::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void UAzurukAbilityTest::Initialize(APawn* owner, AController* instigator)
+void AAzurukAbilityTest::Initialize(APawn* owner, APawn* instigator)
 {
 	Super::Initialize(owner, instigator);
 }
 
-void UAzurukAbilityTest::InputPressed()
+void AAzurukAbilityTest::InputPressed()
 {
 	Super::InputPressed();
 }
 
-void UAzurukAbilityTest::InputReleased()
+void AAzurukAbilityTest::InputReleased()
 {
 	Super::InputReleased();
 }
 
-FHitResult UAzurukAbilityTest::GetHitResult(float Range, FName StartSocket)
+FHitResult AAzurukAbilityTest::GetHitResult(float Range, FName StartSocket)
 {
 	const FVector Origin = GetCastingLocation(StartSocket);
 	const FVector ShootDir = GetCameraAim();
@@ -60,7 +60,7 @@ FHitResult UAzurukAbilityTest::GetHitResult(float Range, FName StartSocket)
 	return Impact;
 }
 
-AActor* UAzurukAbilityTest::GetActorHit(float Range, FName StartSocket)
+AActor* AAzurukAbilityTest::GetActorHit(float Range, FName StartSocket)
 {
 	FVector Origin = GetCastingLocation(StartSocket);
 	const FVector ShootDir = GetCameraAim();
@@ -90,7 +90,7 @@ AActor* UAzurukAbilityTest::GetActorHit(float Range, FName StartSocket)
 	return nullptr;
 }
 
-void UAzurukAbilityTest::SpawnTrailEffect(UParticleSystem* trailFX, float trailSpeed, FName trailSpeedParam, FHitResult target, FName SocketName)
+void AAzurukAbilityTest::SpawnTrailEffect(UParticleSystem* trailFX, float trailSpeed, FName trailSpeedParam, FHitResult target, FName SocketName)
 {
 	FVector Origin = GetCastingLocation(SocketName);
 	if (target.GetActor())
@@ -108,20 +108,20 @@ void UAzurukAbilityTest::SpawnTrailEffect(UParticleSystem* trailFX, float trailS
 	}
 }
 
-FVector UAzurukAbilityTest::GetCameraDamageStarLocation(const FVector& AimDir) const
+FVector AAzurukAbilityTest::GetCameraDamageStarLocation(const FVector& AimDir) const
 {
 	FVector OutStartTrace = FVector::ZeroVector;
 	if (Instigator)
 	{
 		FRotator UnusedRot;
-		Instigator->GetPlayerViewPoint(OutStartTrace, UnusedRot);
+		//Instigator->GetPlayerViewPoint(OutStartTrace, UnusedRot);
 		OutStartTrace = OutStartTrace + AimDir * ((AbilityOwner->GetActorLocation() - OutStartTrace) | AimDir);
 		//OutStartTrace = OutStartTrace + AimDir * ((Instigator->GetActorLocation() - OutStartTrace));
 	}
 	return OutStartTrace;
 }
 
-FVector UAzurukAbilityTest::GetCameraAim() const
+FVector AAzurukAbilityTest::GetCameraAim() const
 {
 	FVector FinalAim = FVector::ZeroVector;
 
@@ -129,7 +129,7 @@ FVector UAzurukAbilityTest::GetCameraAim() const
 	{
 		FVector CamLoc;
 		FRotator CamRot;
-		Instigator->GetPlayerViewPoint(CamLoc, CamRot);
+		//Instigator->GetPlayerViewPoint(CamLoc, CamRot);
 		FinalAim = CamRot.Vector();
 	}
 	else if (AbilityOwner)
@@ -139,7 +139,7 @@ FVector UAzurukAbilityTest::GetCameraAim() const
 	return FinalAim;
 }
 
-FVector UAzurukAbilityTest::GetCastingLocation(FName SocketName) const
+FVector AAzurukAbilityTest::GetCastingLocation(FName SocketName) const
 {
 	// Get socket location
 	if (false)
@@ -149,7 +149,7 @@ FVector UAzurukAbilityTest::GetCastingLocation(FName SocketName) const
 	return FVector(0, 0, 0);
 }
 
-FHitResult UAzurukAbilityTest::RangedPowerTrace(const FVector& StartTrace, const FVector& EndTrace) const
+FHitResult AAzurukAbilityTest::RangedPowerTrace(const FVector& StartTrace, const FVector& EndTrace) const
 {
 	FHitResult Hit(ForceInit);
 

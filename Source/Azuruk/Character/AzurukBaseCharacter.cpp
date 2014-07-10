@@ -2,6 +2,8 @@
 
 #include "Azuruk.h"
 #include "AzurukBaseCharacter.h"
+#include "AzurukAbilityBase.h"
+#include "Platform.h"
 
 const uint8 DEFAULTFEATURE = uint8(0);
 
@@ -20,10 +22,6 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	CharacterMovement->RotationRate = FRotator(0.0f, 560.0f, 0.0f); // ...at this rotation rate
 	CharacterMovement->JumpZVelocity = 600.f;
 	CharacterMovement->AirControl = 0.2f;
-
-	// Create ability manager
-	//AbilityManager = PCIP.CreateDefaultSubobject<UAzurukAbilityManager>(this, TEXT("AbilityManager"));
-	//AbilityManager->bAutoActivate = true;
 }
 
 void AAzurukBaseCharacter::PostInitializeComponents()
@@ -154,23 +152,71 @@ bool AAzurukBaseCharacter::IsAlive() const
 	return Health > 0;
 }
 
-void AAzurukBaseCharacter::ActionButtonOne()
+//////////////////////////////////////////////////////////////////////////
+// Abilities
+
+void AAzurukBaseCharacter::AddAbility(class AAzurukAbilityBase* Ability)
 {
-	/*AAzurukPlayerController* PC = Cast<AAzurukPlayerController>(Controller);
-	if (PC)
+	if (Ability != NULL)
 	{
-		AbilityManager->GetButtonOne()->InputPressed();
-		OnCharacterCast.Broadcast();
-	}*/
+		Ability->OnAddAbility(this);
+		Abilities.AddUnique(Ability);
+	}
 }
 
-void AAzurukBaseCharacter::ActionButtonOneReleased()
+void AAzurukBaseCharacter::RemoveAbility(class AAzurukAbilityBase* Ability)
 {
-	/*AAzurukPlayerController* PC = Cast<AAzurukPlayerController>(Controller);
-	if (PC)
+	if (Ability != NULL)
 	{
-	AbilityManager->GetButtonOne()->InputReleased();
-	}*/
+		Ability->OnRemoveAbility();
+		Abilities.RemoveSingle(Ability);
+	}
 }
 
+class AAzurukAbilityBase* AAzurukBaseCharacter::FindAbility(TSubclassOf<class AAzurukAbilityBase> AbilityClass)
+{
+	for (int32 i = 0; i < Abilities.Num(); i++)
+	{
+		if (Abilities[i] && Abilities[i]->IsA(AbilityClass))
+		{
+			return Abilities[i];
+		}
+	}
 
+	return NULL;
+}
+
+class AAzurukAbilityBase* AAzurukBaseCharacter::FindAbilityBoundToKey(FString KeyBinding)
+{
+	for (int32 i = 0; i < Abilities.Num(); i++)
+	{
+		if (Abilities[i] && Abilities[i]->GetKeyBinding() == KeyBinding)
+		{
+			return Abilities[i];
+		}
+	}
+
+	return NULL;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Input
+
+void AAzurukBaseCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
+{
+	check(InputComponent);
+
+	/* abilities */
+	InputComponent->BindAction("AbilityOne", IE_Pressed, this, &AAzurukBaseCharacter::AbilityButtonOne);
+	InputComponent->BindAction("AbilityOne", IE_Released, this, &AAzurukBaseCharacter::AbilityButtonOneReleased);
+}
+
+void AAzurukBaseCharacter::AbilityButtonOne()
+{
+	FindAbilityBoundToKey("1")->InputPressed();
+}
+
+void AAzurukBaseCharacter::AbilityButtonOneReleased()
+{
+	FindAbilityBoundToKey("1")->InputReleased();
+}

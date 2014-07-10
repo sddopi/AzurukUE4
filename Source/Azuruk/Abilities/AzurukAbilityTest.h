@@ -10,7 +10,7 @@
  * Test ability
  */
 UCLASS(BlueprintType, Blueprintable)
-class UAzurukAbilityTest : public UAzurukAbilityBase
+class AAzurukAbilityTest : public AAzurukAbilityBase
 {
 	GENERATED_UCLASS_BODY()
 
@@ -20,7 +20,7 @@ class UAzurukAbilityTest : public UAzurukAbilityBase
 	virtual void InputPressed() OVERRIDE;
 	virtual void InputReleased() OVERRIDE;
 protected:
-	virtual void Initialize(APawn* owner, AController* instigator) OVERRIDE;
+	virtual void Initialize(APawn* owner, APawn* instigator) OVERRIDE;
 
 
 //////////////////////////////////////////////////////////////////////////

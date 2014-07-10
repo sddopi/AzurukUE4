@@ -40,7 +40,7 @@ void AAzurukPlayerCharacter::Tick(float DeltaTime)
 
 void AAzurukPlayerCharacter::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
-	check(InputComponent);
+	Super::SetupPlayerInputComponent(InputComponent);
 	// Set up action bindings
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	InputComponent->BindAction("Use", IE_Pressed, this, &AAzurukPlayerCharacter::UseObject);
