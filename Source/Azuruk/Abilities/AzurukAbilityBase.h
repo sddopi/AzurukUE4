@@ -85,10 +85,11 @@ protected:
 	bool IsAbilityInitialized;
 
 private:
-	bool isChanneled;
-	bool isCasted;
-	bool isOnCooldown;
-	bool isCharged;
+	bool bIsChanneled;
+	bool bIsCasted;
+	bool bIsOnCooldown;
+	bool bIsCharged;
+	bool bIsInstant;
 	float currentIntervalTime;
 	float currentCooldownTime;
 	float currentCastTime;

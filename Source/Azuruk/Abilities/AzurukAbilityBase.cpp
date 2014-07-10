@@ -7,24 +7,24 @@
 AAzurukAbilityBase::AAzurukAbilityBase(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-	isOnCooldown = false;
-	isChanneled = false;
-	isCasted = false;
+	bIsOnCooldown = false;
+	bIsChanneled = false;
+	bIsCasted = false;
 }
 
 void AAzurukAbilityBase::Tick(float DeltaTime)
 {
-	if (isOnCooldown)
+	if (bIsOnCooldown)
 	{
 		currentCooldownTime += DeltaTime;
 		if (currentCooldownTime >= AbilityCooldownTime)
 		{
 			currentCooldownTime = 0;
-			isOnCooldown = false;
+			bIsOnCooldown = false;
 		}
 	}
 
-	if (isChanneled)
+	if (bIsChanneled)
 	{
 		currentIntervalTime += DeltaTime;
 		if (currentIntervalTime >= ChannelInterval)
@@ -34,25 +34,31 @@ void AAzurukAbilityBase::Tick(float DeltaTime)
 		}
 	}
 
-	if (isCasted)
+	if (bIsCasted)
 	{
 		currentCastTime += DeltaTime;
 		if (currentCastTime >= MaxCastTime)
 		{
 			currentCastTime = 0;
-			isCasted = false;
+			bIsCasted = false;
 			OnAbilityStart();
 		}
 	}
-	if (isCharged)
+
+	if (bIsCharged)
 	{
 		currentChargeTime += DeltaTime;
 		if (currentChargeTime >= MaxCastTime)
 		{
 			currentChargeTime = 0;
-			isCharged = false;
+			bIsCharged = false;
 			OnAbilityStart();
 		}
+	}
+
+	if (bIsInstant)
+	{
+		OnAbilityStart();
 	}
 }
 
@@ -125,23 +131,27 @@ void AAzurukAbilityBase::InputPressed()
 {
 	if (IsAbilityInitialized)
 	{
-		if (!isOnCooldown)
+		if (!bIsOnCooldown)
 		{
 			if (AbilityCastType == ECastType::Casted)
 			{
-				isCasted = true;
-				isOnCooldown = true;
+				bIsCasted = true;
+				bIsOnCooldown = true;
 			}
 			if (AbilityCastType == ECastType::Casted_Charged)
 			{
-				isCharged = true;
-				isOnCooldown = true;
+				bIsCharged = true;
+				bIsOnCooldown = true;
 			}
 			if (AbilityCastType == ECastType::Channeled)
 			{
 				OnAbilityStart();
-				isChanneled = true;
-				isOnCooldown = true;
+				bIsChanneled = true;
+				bIsOnCooldown = true;
+			}
+			if (AbilityCastType == ECastType::Instant)
+			{
+				bIsOnCooldown = true;
 			}
 		}
 	}
@@ -152,7 +162,7 @@ void AAzurukAbilityBase::InputReleased()
 	if (AbilityCastType == ECastType::Channeled)
 	{
 		OnAbilityStop();
-		isChanneled = false;
+		bIsChanneled = false;
 	}
 }
 

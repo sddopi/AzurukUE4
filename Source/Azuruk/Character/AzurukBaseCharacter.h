@@ -108,6 +108,10 @@ public:
 	UPROPERTY()
 	TArray<class AAzurukAbilityBase*> Abilities;
 
+	/* ability being used */
+	AAzurukAbilityBase* AbilityUsed;
+	bool bIsCasting;
+
 	/**
 	* add ability to pawn
 	*
@@ -135,6 +139,20 @@ public:
 	* @param KeyBinding key ability is bound to
 	*/
 	class AAzurukAbilityBase* FindAbilityBoundToKey(FString KeyBinding);
+
+	/**
+	* start ability with defined keybind
+	* 
+	* @param KeyBinding key ability is bound to
+	*/
+	void StartAbility(FString KeyBinding);
+
+	/**
+	* stop ability with defined keybind
+	*
+	* @param KeyBinding key ability is bound to
+	*/
+	void StopAbility(FString KeyBinding);
 
 
 //////////////////////////////////////////////////////////////////////////

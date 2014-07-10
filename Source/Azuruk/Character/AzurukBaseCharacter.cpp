@@ -20,6 +20,9 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	CharacterMovement->RotationRate = FRotator(0.0f, 560.0f, 0.0f); // ...at this rotation rate
 	CharacterMovement->JumpZVelocity = 600.f;
 	CharacterMovement->AirControl = 0.2f;
+
+	// Initial bool setup
+	bIsCasting = false;
 }
 
 void AAzurukBaseCharacter::PostInitializeComponents()
@@ -234,6 +237,28 @@ class AAzurukAbilityBase* AAzurukBaseCharacter::FindAbilityBoundToKey(FString Ke
 	return NULL;
 }
 
+void AAzurukBaseCharacter::StartAbility(FString KeyBinding)
+{
+	if (bIsCasting == false) {
+		bIsCasting = true;
+		AbilityUsed = FindAbilityBoundToKey(KeyBinding);
+		if (AbilityUsed != NULL)
+		{
+			AbilityUsed->InputPressed();
+		}
+	}
+}
+
+void AAzurukBaseCharacter::StopAbility(FString KeyBinding)
+{
+	bIsCasting = false;
+	AbilityUsed = FindAbilityBoundToKey(KeyBinding);
+	if (AbilityUsed != NULL)
+	{
+		AbilityUsed->InputReleased();
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -248,10 +273,10 @@ void AAzurukBaseCharacter::SetupPlayerInputComponent(class UInputComponent* Inpu
 
 void AAzurukBaseCharacter::AbilityButtonOne()
 {
-	FindAbilityBoundToKey("1")->InputPressed();
+	StartAbility("1");
 }
 
 void AAzurukBaseCharacter::AbilityButtonOneReleased()
 {
-	FindAbilityBoundToKey("1")->InputReleased();
+	StopAbility("1");
 }
