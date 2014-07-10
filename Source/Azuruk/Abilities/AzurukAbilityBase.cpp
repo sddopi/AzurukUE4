@@ -72,7 +72,7 @@ bool AAzurukAbilityBase::IsTickable() const
 //////////////////////////////////////////////////////////////////////////
 // Ability Manager
 
-void AAzurukAbilityBase::OnAddAbility(AAzurukBaseCharacter* NewOwner)
+void AAzurukAbilityBase::OnAddAbility(APawn* NewOwner)
 {
 	SetAbilityOwner(NewOwner);
 }

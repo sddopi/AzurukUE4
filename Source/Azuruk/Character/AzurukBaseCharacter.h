@@ -4,6 +4,7 @@
 
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Abilities/AzurukAbilityBase.h"
 #include "AzurukBaseCharacter.generated.h"
 
 /*
@@ -104,7 +105,7 @@ private:
 public:
 
 	/* Ability list */
-	UPROPERTY(Transient, Replicated)
+	UPROPERTY()
 	TArray<class AAzurukAbilityBase*> Abilities;
 
 	/**

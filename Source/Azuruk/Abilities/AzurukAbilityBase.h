@@ -44,7 +44,7 @@ class AAzurukAbilityBase : public AActor
 	// Ability Manager
 
 	/* ability was added to pawn */
-	virtual void OnAddAbility(AAzurukBaseCharacter* NewOwner);
+	virtual void OnAddAbility(APawn* NewOwner);
 
 	/* ability removed from pawn */
 	virtual void OnRemoveAbility();

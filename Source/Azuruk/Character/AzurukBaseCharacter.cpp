@@ -2,8 +2,6 @@
 
 #include "Azuruk.h"
 #include "AzurukBaseCharacter.h"
-#include "AzurukAbilityBase.h"
-#include "Platform.h"
 
 const uint8 DEFAULTFEATURE = uint8(0);
 
