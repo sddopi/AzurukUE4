@@ -211,6 +211,20 @@ void AAzurukBaseCharacter::RemoveAbility(class AAzurukAbilityBase* Ability)
 	}
 }
 
+void AAzurukBaseCharacter::DestroyAbilities()
+{
+	// remove all abilities from pawn and destroy them
+	for (int32 i = Abilities.Num() - 1; i >= 0; i--)
+	{
+		AAzurukAbilityBase* Ability = Abilities[i];
+		if (Ability)
+		{
+			RemoveAbility(Ability);
+			Ability->Destroy();
+		}
+	}
+}
+
 class AAzurukAbilityBase* AAzurukBaseCharacter::FindAbility(TSubclassOf<class AAzurukAbilityBase> AbilityClass)
 {
 	for (int32 i = 0; i < Abilities.Num(); i++)
@@ -241,10 +255,10 @@ void AAzurukBaseCharacter::StartAbility(FString KeyBinding)
 {
 	if (bIsCasting == false) {
 		bIsCasting = true;
-		AbilityUsed = FindAbilityBoundToKey(KeyBinding);
-		if (AbilityUsed != NULL)
+		AAzurukAbilityBase* Ability = FindAbilityBoundToKey(KeyBinding);
+		if (Ability != NULL)
 		{
-			AbilityUsed->InputPressed();
+			Ability->InputPressed();
 		}
 	}
 }
@@ -252,10 +266,10 @@ void AAzurukBaseCharacter::StartAbility(FString KeyBinding)
 void AAzurukBaseCharacter::StopAbility(FString KeyBinding)
 {
 	bIsCasting = false;
-	AbilityUsed = FindAbilityBoundToKey(KeyBinding);
-	if (AbilityUsed != NULL)
+	AAzurukAbilityBase* Ability = FindAbilityBoundToKey(KeyBinding);
+	if (Ability != NULL)
 	{
-		AbilityUsed->InputReleased();
+		Ability->InputReleased();
 	}
 }
 

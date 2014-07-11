@@ -109,7 +109,6 @@ public:
 	TArray<class AAzurukAbilityBase*> Abilities;
 
 	/* ability being used */
-	AAzurukAbilityBase* AbilityUsed;
 	bool bIsCasting;
 
 	/**
@@ -125,6 +124,11 @@ public:
 	* @param Ability Ability to remove.
 	*/
 	void RemoveAbility(class AAzurukAbilityBase* Ability);
+
+	/**
+	* destroy all abilities in array
+	*/
+	void DestroyAbilities();
 
 	/**
 	* Find in pawn

@@ -14,10 +14,54 @@ enum ECastType
 	Instant
 };
 
+USTRUCT()
+struct FAbilityAnim
+{
+	GENERATED_USTRUCT_BODY()
+
+	/** animation played on pawn (1st person view) */
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* Pawn1P;
+
+	/** animation played on pawn (3rd person view) */
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* Pawn3P;
+};
+
+USTRUCT()
+struct FAbilityData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Ability|Properties")
+	float MaxCastTime;
+
+	UPROPERTY(EditAnywhere, Category = "Ability|Properties")
+	float ChannelInterval;
+
+	UPROPERTY(EditAnywhere, Category = "Ability|Properties")
+	float MaxOverCastTime;
+
+	UPROPERTY(EditAnywhere, Category = "Ability|Properties")
+	float AbilityCooldownTime;
+
+	UPROPERTY(EditAnywhere, Category = "Ability|Properties")
+	TEnumAsByte<ECastType> AbilityCastType;
+
+	FAbilityData()
+	{
+		MaxCastTime = 3.0f;
+		ChannelInterval = 1.0f;
+		MaxOverCastTime = 1.0f;
+		AbilityCooldownTime = 5.0f;
+		AbilityCastType = Instant;
+	}
+};
+
 /**
- * 
+ * Base ability
  */
-UCLASS(BlueprintType, Blueprintable)
+UCLASS(Abstract, Blueprintable)
 class AAzurukAbilityBase : public AActor
 {
 	GENERATED_UCLASS_BODY()
@@ -27,62 +71,124 @@ class AAzurukAbilityBase : public AActor
 
 	virtual class UWorld* GetWorld() const OVERRIDE;
 
-	//////////////////////////////////////////////////////////////////////////
-	// Input
+	/** perform initial setup */
+	virtual void PostInitializeComponents() OVERRIDE;
 
+//////////////////////////////////////////////////////////////////////////
+// Input
+
+	UFUNCTION(BlueprintCallable, Category = "Ability|Input")
 	virtual void InputPressed();
+
+	UFUNCTION(BlueprintCallable, Category = "Ability|Input")
 	virtual void InputReleased();
 
-	UPROPERTY(EditAnywhere, Category = "Ability Properties")
-		FString KeyBinding;
-
+	UPROPERTY(EditAnywhere, Category = "Ability|Input")
+	FString KeyBinding;
+	
+	UFUNCTION(BlueprintCallable, Category = "Ability|Input")
 	void SetKeyBinding(FString NewKeyBinding);
 
+	UFUNCTION(BlueprintCallable, Category = "Ability|Input")
 	FString GetKeyBinding();
 
-	//////////////////////////////////////////////////////////////////////////
-	// Ability Manager
+//////////////////////////////////////////////////////////////////////////
+// Events
 
-	/* ability was added to pawn */
-	virtual void OnAddAbility(APawn* NewOwner);
+	/** ability was added to pawn */
+	virtual void OnAddAbility(class AAzurukBaseCharacter* NewOwner);
 
-	/* ability removed from pawn */
+	/** ability removed from pawn */
 	virtual void OnRemoveAbility();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Ability|Events")
-		void OnAbilityStart();
+	void OnAbilityStart();
+	void OnAbilityStop();
+	void OnAbilityInitialized();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Ability|Events")
-		void OnAbilityStop();
+//////////////////////////////////////////////////////////////////////////
+// Replication
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Ability|Events")
-		void OnAbilityInitialized();
+	UFUNCTION()
+		void OnRep_AbilityOwner();
 
-	virtual void Initialize(APawn* owner, APawn* instigator);
+//////////////////////////////////////////////////////////////////////////
+// Reading Data
 
 public:
-	UPROPERTY(EditAnywhere, Category = "Ability Properties")
-		TEnumAsByte<ECastType> AbilityCastType;
 
-	void  SetAbilityOwner(APawn* Owner);
+	/** set the owner of the ability */
+	void  SetAbilityOwner(class AAzurukBaseCharacter* Owner);
+
+	/** get owner mesh */
+	UFUNCTION()
+	USkeletalMeshComponent* GetOwnerMesh() const;
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Ability Properties")
-		float MaxCastTime;
 
-	UPROPERTY(EditAnywhere, Category = "Ability Properties")
-		float ChannelInterval;
+	/** pawn owner */
+	UPROPERTY() //Transient, ReplicatedUsing=OnRep_AbilityOwner
+	class AAzurukBaseCharacter* AbilityOwner;
+	
+	/** ability attach socket */
+	UPROPERTY(EditDefaultsOnly, Category = "Ability|Mesh")
+	FName AttachPoint;
 
-	UPROPERTY(EditAnywhere, Category = "Ability Properties")
-		float MaxOverCastTime;
+	/** ability data */
+	UPROPERTY(EditDefaultsOnly, Category = "Config")
+	FAbilityData AbilityConfig;
 
-	UPROPERTY(EditAnywhere, Category = "Ability Properties")
-		float AbilityCooldownTime;
+	/** cast loop audio cue */
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	UAudioComponent* CastLoopSound;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Ability")
-		APawn* AbilityOwner;
+	/** cast audio cue */
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	UAudioComponent* CastSound;
 
-	bool IsAbilityInitialized;
+	/** FX for cast loop */
+	UPROPERTY(EditDefaultsOnly, Category = "Ability|Effects")
+	UParticleSystem* CastLoopFX;
+
+	/** spawned component for cast loop FX */
+	UPROPERTY()
+	UParticleSystemComponent* CastLoopPSC;
+
+	/** FX for cast */
+	UPROPERTY(EditDefaultsOnly, Category = "Ability|Effects")
+	UParticleSystem* CastFX;
+
+	/** spawned component for cast */
+	UPROPERTY()
+	UParticleSystemComponent* CastPSC;
+
+	/** cast loop animation */
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	FAbilityAnim CastLoopAnim;
+
+	/** cast animation */
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	FAbilityAnim CastAnim;
+
+//////////////////////////////////////////////////////////////////////////
+// Ability Usage
+
+	/** ability specific usage implementation */
+	virtual void UseAbility() PURE_VIRTUAL(AAzurukAbilityBase::UseAbility,);
+
+	/** play ability sounds */
+	UAudioComponent* PlayAbilitySound(USoundCue* Sound);
+
+	/** play ability animations */
+	float PlayAbilityAnimation(const FAbilityAnim& Animation);
+
+	/** stop playing ability animations */
+	void StopAbilityAnimation(const FAbilityAnim& Animation);
+
+	/** get the attach location of the ability */
+	FVector GetAttachLocation() const;
+
+	/** get the attach rotation of the ability */
+	FVector GetAttachDirection() const;
 
 private:
 	bool bIsChanneled;
@@ -90,8 +196,9 @@ private:
 	bool bIsOnCooldown;
 	bool bIsCharged;
 	bool bIsInstant;
-	float currentIntervalTime;
-	float currentCooldownTime;
-	float currentCastTime;
-	float currentChargeTime;
+	bool bIsAbilityInitialized;
+	float CurrentIntervalTime;
+	float CurrentCooldownTime;
+	float CurrentCastTime;
+	float CurrentChargeTime;
 };

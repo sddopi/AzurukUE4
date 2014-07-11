@@ -4,7 +4,7 @@
 #include "AzurukEffectBase.h"
 
 
-UAzurukEffectBase::UAzurukEffectBase(const class FPostConstructInitializeProperties& PCIP)
+AAzurukEffectBase::AAzurukEffectBase(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
 

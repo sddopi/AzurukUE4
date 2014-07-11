@@ -22,7 +22,10 @@ public class Azuruk : ModuleRules
                 "Core", 
                 "CoreUObject", 
                 "Engine", 
-                "InputCore" 
+                "InputCore",
+				"OnlineSubsystem",
+				"OnlineSubsystemUtils",
+				"AssetRegistry",
             }
         );
 
