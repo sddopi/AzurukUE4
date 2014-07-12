@@ -9,9 +9,9 @@ namespace EFeatureName
 {
 	enum Type
 	{
+		FeatureDefault,
 		FeatureOne,
 		FeatureTwo,
-		FeatureDefault,
 	};
 }
 
@@ -39,6 +39,9 @@ class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 	/* Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	TSubobjectPtr<class UCameraComponent> FollowCamera;
+
+	/* PostInitializeComponents */
+	virtual void PostInitializeComponents() OVERRIDE;
 
 	/* Tick */
 	virtual void Tick(float DeltaTime) OVERRIDE;
@@ -102,6 +105,9 @@ public:
 	/* Dynamic Mesh Features Array */
 	UPROPERTY()
 	TArray<UAzurukCharacterFeatures*> featureArray;
+
+	/* */
+	void SetDefaultFeatures();
 
 private:
 

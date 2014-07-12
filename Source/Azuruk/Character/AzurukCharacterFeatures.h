@@ -13,7 +13,10 @@ class UAzurukCharacterFeatures : public UObject
 {
 	GENERATED_UCLASS_BODY()
 
-	/* Sets the SkelMesh & AnimInstance on Passed Mesh */
+//////////////////////////////////////////////////////////////////////////
+// Features
+
+	/* */
 	void SetFeatures(USkeletalMeshComponent* PassedMesh);
 
 	/* Checks if passed features are the same as current */
@@ -22,23 +25,23 @@ class UAzurukCharacterFeatures : public UObject
 	/* Checks if feature is null */
 	bool NotNull();
 
+	/*  */
+	UAnimMontage* ReturnMorphAnim();
+
+//////////////////////////////////////////////////////////////////////////
+// Feature Time
+
+	/*  */
+	void IncreaseFeatureTime();
+
+	/*  */
+	void DecreaseFeatureTime();
+
 	/* Return Morph Time */
 	float ReturnFeatureTime();
 
 	/* Returns Max Morph Time */
-	float ReturnMaxFeatureTime() const;
-
-	/*  */
-	void ModifyFeatureTime();
-
-	/* */
-	bool isFeatureActive();
-
-	/* */
-	bool isFeatureDepleted();
-
-	/* */
-	void ModifyFeatureActive(bool newBool);
+	float GetMaxFeatureTime() const;
 
 protected:
 
@@ -48,9 +51,12 @@ protected:
 	UPROPERTY()
 	UClass* featureAnimInstance;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Character Features")
+	UPROPERTY()
+	UAnimMontage* featureMorph;
+
+	UPROPERTY()
 	float featureTime;
 
 	UPROPERTY()
-	bool featureActive;
+	float featureMultiplier;
 };

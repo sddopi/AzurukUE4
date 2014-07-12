@@ -7,7 +7,6 @@ AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitial
 	: Super(PCIP)
 {
 	// Azuruk Property Defaults
-	inputFeature = EFeatureName::FeatureDefault;
 	characterState = IDLE;
 	usedActor = nullptr;
 	useDistance = 100.f;
@@ -30,8 +29,20 @@ AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitial
 	FollowCamera->bUseControllerViewRotation = false; // Camera does not rotate relative to arm
 }
 
+void AAzurukPlayerCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	AddFeatures(defaultCharacterFeature);
+}
+
 void AAzurukPlayerCharacter::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
+
+	if (featureArray.IsValidIndex(inputFeature))
+	{
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,7 +146,7 @@ void AAzurukPlayerCharacter::StopDNACollect()
 
 void AAzurukPlayerCharacter::AddFeatures(UAzurukCharacterFeatures* NewFeat)
 {
-	if (NewFeat->NotNull())
+	if (NewFeat->NotNull() && !featureArray.Contains(NewFeat))
 	{
 		featureArray.Add(NewFeat);
 	}
@@ -146,25 +157,27 @@ void AAzurukPlayerCharacter::MorphTwo() { StartMorph( EFeatureName::FeatureTwo )
 
 void AAzurukPlayerCharacter::StartMorph(uint8 index)
 {
-	if (characterState == IDLE)
+	if (characterState == IDLE && featureArray.IsValidIndex(index))
 	{
-		inputFeature = index;
-	}
+		inputFeature = featureArray[index]->EqualFeatures(Mesh) ?
+					   EFeatureName::FeatureDefault				:
+					   index;
 
-	if (CanMorph())
-	{
-		characterState = MORPHING;
+		if (CanMorph())
+		{
+			characterState = MORPHING;
 
-		float AnimDuration = PlayAnimMontage(MorphAnim);
+			float AnimDuration = PlayAnimMontage(MorphAnim);
 
-		GetWorldTimerManager().SetTimer(this, &AAzurukPlayerCharacter::StopMorph, AnimDuration, false);
+			GetWorldTimerManager().SetTimer(this, &AAzurukPlayerCharacter::StopMorph, AnimDuration, false);
+		}
 	}
 }
 
 void AAzurukPlayerCharacter::StopMorph()
 {
-	characterState = IDLE;
 	SetFeatures(inputFeature);
+	characterState = IDLE;
 }
 
 bool AAzurukPlayerCharacter::CanMorph()
@@ -174,9 +187,8 @@ bool AAzurukPlayerCharacter::CanMorph()
 		bool bIsCorrectStates = (CharacterMovement->MovementMode == EMovementMode::MOVE_Falling ||
 								 CharacterMovement->MovementMode == EMovementMode::MOVE_Walking) &&
 								 characterState == IDLE;
-		bool bFeatureDepleted = featureArray[inputFeature]->isFeatureDepleted();
 
-		return bIsCorrectStates && !bFeatureDepleted;
+		return bIsCorrectStates;
 	}
 	return false;
 }
@@ -192,21 +204,23 @@ bool AAzurukPlayerCharacter::CanCollectDNA()
 
 void AAzurukPlayerCharacter::SetFeatures(uint8 index)
 {
-	if (featureArray[index]->EqualFeatures(Mesh))
-	{
-		defaultCharacterFeature->SetFeatures(Mesh);
-	}
-	else
-	{
-		featureArray[index]->SetFeatures(Mesh);
-	}
+	featureArray[inputFeature]->SetFeatures(Mesh);
+	MorphAnim = featureArray[inputFeature]->ReturnMorphAnim();
 }
 
 void AAzurukPlayerCharacter::CheckActionInterupt()
 {
 	if (characterState != IDLE)
 	{
-		GetWorldTimerManager().ClearAllTimersForObject(this);
+		switch (characterState)
+		{
+			case COLLECTING:
+				GetWorldTimerManager().ClearTimer(this, &AAzurukPlayerCharacter::StopDNACollect);
+				break;
+			case MORPHING:
+				GetWorldTimerManager().ClearTimer(this, &AAzurukPlayerCharacter::StopMorph);
+				break;
+		}
 		characterState = IDLE;
 		StopAllAnimMontages();
 	}

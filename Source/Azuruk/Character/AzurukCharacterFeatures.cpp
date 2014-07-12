@@ -12,15 +12,21 @@ UAzurukCharacterFeatures::UAzurukCharacterFeatures(const class FPostConstructIni
 	{
 		featureMesh = outerChar->Mesh->SkeletalMesh;
 		featureAnimInstance = outerChar->Mesh->GetAnimInstance()->GetClass();
+		featureMorph = outerChar->MorphAnim;
 		featureTime = outerChar->maxMorphTime;
-		featureActive = false;
+		featureMultiplier = 1.0f;
 	}
 }
 
 void UAzurukCharacterFeatures::SetFeatures(USkeletalMeshComponent* PassedMesh)
 {
-	PassedMesh->SetAnimClass(featureAnimInstance);
 	PassedMesh->SetSkeletalMesh(featureMesh);
+	PassedMesh->SetAnimClass(featureAnimInstance);
+}
+
+UAnimMontage* UAzurukCharacterFeatures::ReturnMorphAnim()
+{
+	return featureMorph;
 }
 
 bool UAzurukCharacterFeatures::EqualFeatures(USkeletalMeshComponent* Mesh)
@@ -30,7 +36,20 @@ bool UAzurukCharacterFeatures::EqualFeatures(USkeletalMeshComponent* Mesh)
 
 bool UAzurukCharacterFeatures::NotNull()
 {
-	return featureMesh != nullptr || featureAnimInstance != nullptr;
+	return featureMesh != nullptr || featureAnimInstance != nullptr || featureMorph != nullptr;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Feature Time
+
+void UAzurukCharacterFeatures::IncreaseFeatureTime()
+{
+	featureTime = FMath::Min(featureTime - featureMultiplier, GetMaxFeatureTime());
+}
+
+void UAzurukCharacterFeatures::DecreaseFeatureTime()
+{
+	featureTime = FMath::Max(featureTime - featureMultiplier, 0.0f);
 }
 
 float UAzurukCharacterFeatures::ReturnFeatureTime()
@@ -38,35 +57,10 @@ float UAzurukCharacterFeatures::ReturnFeatureTime()
 	return featureTime;
 }
 
-float UAzurukCharacterFeatures::ReturnMaxFeatureTime() const
+float UAzurukCharacterFeatures::GetMaxFeatureTime() const
 {
 	return GetClass()->GetDefaultObject<UAzurukCharacterFeatures>()->ReturnFeatureTime();
 }
 
-void UAzurukCharacterFeatures::ModifyFeatureTime()
-{
-	if (featureActive)
-	{
-		featureTime = FMath::Max(featureTime - 1.0f, 0.0f);
-	}
-	else
-	{
-		featureTime = FMath::Min(featureTime + 1.0f, ReturnMaxFeatureTime());
-	}
-}
 
-bool UAzurukCharacterFeatures::isFeatureActive()
-{
-	return featureActive;
-}
-
-bool UAzurukCharacterFeatures::isFeatureDepleted()
-{
-	return featureTime == 0.0f;
-}
-
-void UAzurukCharacterFeatures::ModifyFeatureActive(bool newBool)
-{
-	featureActive = newBool;
-}
 
