@@ -19,14 +19,36 @@ class AAzurukAIController : public AAIController
 	UPROPERTY(transient)
 	TSubobjectPtr<class UBehaviorTreeComponent> BehaviorComp;
 
+	UPROPERTY(EditDefaultsOnly, Category = "AI Properties")
+	float wanderRadius;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI Properties")
+	float sightDistance;
+
 	virtual void PostInitializeComponents() OVERRIDE;
 
 	virtual void Possess(class APawn* InPawn) OVERRIDE;
 
 	virtual void BeginInactiveState() OVERRIDE;
 
+	UFUNCTION(BlueprintCallable, Category = Behavior)
+	void SeeEnemy();
+
+	void SetEnemy(class AAzurukBaseCharacter* enemyPawn);
+
+	AAzurukAICharacter* GetAICharacter() const;
+
+
+protected:
+
+	int32 enemyKeyID,
+		  destinationKeyID;
+
 private:
 
 	UPROPERTY()
-	FVector SpawnLoc;
+	AAzurukAICharacter* AICharacter;
+
+	UPROPERTY()
+	AAzurukPlayerCharacter* playerCharacter;
 };
