@@ -41,7 +41,7 @@ class UAzurukCharacterFeatures : public UObject
 	float ReturnFeatureTime();
 
 	/* Returns Max Morph Time */
-	float GetMaxFeatureTime() const;
+	float ReturnMaxFeatureTime() const;
 
 protected:
 

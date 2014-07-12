@@ -29,10 +29,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Azuruk Properties")
 	float maxMorphTime;
 
-protected:
-
 	UPROPERTY(EditDefaultsOnly, Category = Animation)
-	UAnimMontage* MorphAnim;	
+	UAnimMontage* MorphAnim;
 
 //////////////////////////////////////////////////////////////////////////
 // Animations

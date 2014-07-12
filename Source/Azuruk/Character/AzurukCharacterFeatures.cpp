@@ -44,7 +44,7 @@ bool UAzurukCharacterFeatures::NotNull()
 
 void UAzurukCharacterFeatures::IncreaseFeatureTime()
 {
-	featureTime = FMath::Min(featureTime - featureMultiplier, GetMaxFeatureTime());
+	featureTime = FMath::Min(featureTime - featureMultiplier, ReturnFeatureTime());
 }
 
 void UAzurukCharacterFeatures::DecreaseFeatureTime()
@@ -57,7 +57,7 @@ float UAzurukCharacterFeatures::ReturnFeatureTime()
 	return featureTime;
 }
 
-float UAzurukCharacterFeatures::GetMaxFeatureTime() const
+float UAzurukCharacterFeatures::ReturnMaxFeatureTime() const
 {
 	return GetClass()->GetDefaultObject<UAzurukCharacterFeatures>()->ReturnFeatureTime();
 }
