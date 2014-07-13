@@ -10,6 +10,8 @@ AAzurukAICharacter::AAzurukAICharacter(const class FPostConstructInitializePrope
 	AIControllerClass = AAzurukAIController::StaticClass();
 
 	viewField = 70.0f;
+	viewDistance = 100.0f;
+	wanderRadius = 500.0f;
 }
 
 void AAzurukAICharacter::PostInitializeComponents()
@@ -17,6 +19,13 @@ void AAzurukAICharacter::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	spawnLoc = GetActorLocation();
+}
+
+void AAzurukAICharacter::FaceRotation(FRotator NewRotation, float DeltaTime)
+{
+	FRotator CurrentRotation = FMath::RInterpTo(GetActorRotation(), NewRotation, DeltaTime, 8.0f);
+
+	Super::FaceRotation(CurrentRotation, DeltaTime);
 }
 
 

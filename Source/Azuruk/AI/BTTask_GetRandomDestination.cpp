@@ -25,7 +25,7 @@ EBTNodeResult::Type UBTTask_GetRandomDestination::ExecuteTask(UBehaviorTreeCompo
 	if (AIChar)
 	{
 		FNavLocation navDest;
-		const FVector Loc = GetWorld()->GetNavigationSystem()->GetRandomPointInRadius(MyController, AIChar->spawnLoc, MyController->wanderRadius);
+		const FVector Loc = GetWorld()->GetNavigationSystem()->GetRandomPointInRadius(MyController, AIChar->spawnLoc, AIChar->wanderRadius);
 		if (Loc != FVector::ZeroVector)
 		{
 			MyComp->GetBlackboardComponent()->SetValueAsVector(BlackboardKey.GetSelectedKeyID(), Loc);

@@ -13,8 +13,6 @@ AAzurukAIController::AAzurukAIController(const class FPostConstructInitializePro
 
 	bWantsPlayerState = true;
 	PrimaryActorTick.bCanEverTick = true;
-
-	wanderRadius = 30.0f;
 }
 
 void AAzurukAIController::PostInitializeComponents()

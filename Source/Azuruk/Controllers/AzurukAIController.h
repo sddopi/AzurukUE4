@@ -19,12 +19,6 @@ class AAzurukAIController : public AAIController
 	UPROPERTY(transient)
 	TSubobjectPtr<class UBehaviorTreeComponent> BehaviorComp;
 
-	UPROPERTY(EditDefaultsOnly, Category = "AI Properties")
-	float wanderRadius;
-
-	UPROPERTY(EditDefaultsOnly, Category = "AI Properties")
-	float sightDistance;
-
 	virtual void PostInitializeComponents() OVERRIDE;
 
 	virtual void Possess(class APawn* InPawn) OVERRIDE;
