@@ -28,10 +28,11 @@ class AAzurukAIController : public AAIController
 	UFUNCTION(BlueprintCallable, Category = Behavior)
 	void SeeEnemy();
 
-	void SetEnemy(class AAzurukBaseCharacter* enemyPawn);
+	void SetEnemy(class APawn* enemyPawn);
 
 	AAzurukAICharacter* GetAICharacter() const;
 
+	AAzurukPlayerCharacter* GetPlayerCharacter() const;
 
 protected:
 
@@ -42,7 +43,4 @@ private:
 
 	UPROPERTY()
 	AAzurukAICharacter* AICharacter;
-
-	UPROPERTY()
-	AAzurukPlayerCharacter* playerCharacter;
 };

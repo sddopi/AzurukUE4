@@ -9,8 +9,6 @@ AAzurukAICharacter::AAzurukAICharacter(const class FPostConstructInitializePrope
 {
 	AIControllerClass = AAzurukAIController::StaticClass();
 
-	viewField = 70.0f;
-	viewDistance = 100.0f;
 	wanderRadius = 500.0f;
 }
 

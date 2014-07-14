@@ -18,11 +18,6 @@ AAzurukAIController::AAzurukAIController(const class FPostConstructInitializePro
 void AAzurukAIController::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-	for (FConstPawnIterator It = GetWorld()->GetPawnIterator(); It; ++It)
-	{
-		playerCharacter = Cast<AAzurukPlayerCharacter>(*It);
-	}
 }
 
 void AAzurukAIController::Possess(APawn* InPawn)
@@ -48,27 +43,10 @@ void AAzurukAIController::BeginInactiveState()
 }
 
 void AAzurukAIController::SeeEnemy()
-{
-	/*FVector enemyDir = GetNavAgentLocation() - playerCharacter->GetNavAgentLocation();
-
-	if (FRotationMatrix::MakeFromX(GetNavAgentLocation() - enemyDir).Rotator() <= AICharacter->fieldofView &&
-		FVector::Dist(GetNavAgentLocation(), playerCharacter->GetNavAgentLocation()) < sightDistance)
-	{
-		FVector viewPoint = GetPawn()->GetPawnViewLocation();
-
-		FHitResult hit;
-
-		FCollisionQueryParams CollisionParams(NAME_LineOfSight, true, GetPawn());
-		CollisionParams.AddIgnoredActor(playerCharacter);
-	
-		if (GetWorld->LineTraceSingle(hit, GetPawn()->BaseEyeHeight, playerCharacter->GetTargetLocation(GetPawn()), ECC_Visibility, CollisionParams))
-		{
-
-		}
-	}*/
+{	
 }
 
-void AAzurukAIController::SetEnemy(class AAzurukBaseCharacter* enemyPawn)
+void AAzurukAIController::SetEnemy(class APawn* enemyPawn)
 {
 	if (BlackboardComp)
 	{
@@ -80,4 +58,17 @@ AAzurukAICharacter* AAzurukAIController::GetAICharacter() const
 {
 	return AICharacter;
 }
+
+AAzurukPlayerCharacter* AAzurukAIController::GetPlayerCharacter() const
+{
+	APlayerController* PlayerController = NULL;
+
+	if (GetWorld()->GetPlayerControllerIterator())
+	{
+		PlayerController = *(GetWorld()->GetPlayerControllerIterator());
+		return Cast<AAzurukPlayerCharacter>(PlayerController->GetPawn());
+	}
+	return nullptr;
+}
+
 

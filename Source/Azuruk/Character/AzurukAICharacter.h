@@ -21,12 +21,6 @@ class AAzurukAICharacter : public AAzurukBaseCharacter
 	class UBehaviorTree* BotBehavior;
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI Properties")
-	float viewField;
-
-	UPROPERTY(EditDefaultsOnly, Category = "AI Properties")
-	float viewDistance;
-
-	UPROPERTY(EditDefaultsOnly, Category = "AI Properties")
 	float wanderRadius;
 
 	UPROPERTY()
