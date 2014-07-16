@@ -23,7 +23,7 @@ class AAzurukAIController : public AAIController
 
 	virtual void Possess(class APawn* InPawn) OVERRIDE;
 
-	virtual void BeginInactiveState() OVERRIDE;
+	virtual void SetInactive();
 
 //////////////////////////////////////////////////////////////////////////
 // Enemy and Targeting
@@ -33,6 +33,8 @@ class AAzurukAIController : public AAIController
 
 	void SetTarget(AAzurukBaseCharacter* targetPawn);
 
+	void SetDestination(FVector newDest);
+
 //////////////////////////////////////////////////////////////////////////
 // 
 
@@ -40,7 +42,8 @@ class AAzurukAIController : public AAIController
 
 protected:
 
-	int32 targetKeyID;
+	int32 targetKeyID,
+		  destKeyID;
 
 private:
 

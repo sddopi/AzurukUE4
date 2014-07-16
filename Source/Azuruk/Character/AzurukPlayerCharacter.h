@@ -19,8 +19,9 @@ UENUM()
 enum ECharacterState
 {
 	IDLE,
-	COLLECTING,
+	DNACOLLECT,
 	MORPHING,
+	STUNNED,
 };
 
 
@@ -62,6 +63,31 @@ protected:
 	TEnumAsByte<enum ECharacterState> characterState;
 
 //////////////////////////////////////////////////////////////////////////
+// Vitals
+
+private:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Azuruk|Death")
+	float deathTimeDilation;
+
+	/* Identifies if pawn is in its stunned state */
+	UPROPERTY()
+	uint32 bIsStunned : 1;
+
+public:
+
+	/* @RETURN true if Pawn is currently stunned */
+	UFUNCTION(BlueprintCallable, Category="Azuruk|Stun", meta=(ToolTip="Checks if Pawn is Stunned"))
+	virtual bool IsStunned() const;
+
+	/*
+	* Kills pawn.
+	* 
+	* OVERRIDE - Stops player from dying (teleport map)
+	*/
+	virtual void Die(float KillingDamage, struct FDamageEvent const& DamageEvent, class AController* Killer, class AActor* DamageCauser);
+
+//////////////////////////////////////////////////////////////////////////
 // Movement
 
 private:
@@ -78,7 +104,7 @@ private:
 public:
 
 	/* Use object distance */
-	UPROPERTY(EditDefaultsOnly, Category = "Azuruk Properties")
+	UPROPERTY(EditDefaultsOnly, Category = "Azuruk|Using")
 	float useDistance;
 
 private:

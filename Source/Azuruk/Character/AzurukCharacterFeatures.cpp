@@ -12,7 +12,7 @@ UAzurukCharacterFeatures::UAzurukCharacterFeatures(const class FPostConstructIni
 	{
 		featureMesh = outerChar->Mesh->SkeletalMesh;
 		featureAnimInstance = outerChar->Mesh->GetAnimInstance()->GetClass();
-		featureMorph = outerChar->MorphAnim;
+		featureMorph = outerChar->morphAnim;
 		featureTime = outerChar->maxMorphTime;
 		featureMultiplier = 1.0f;
 	}

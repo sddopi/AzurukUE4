@@ -11,6 +11,7 @@ AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitial
 	usedActor = nullptr;
 	useDistance = 100.f;
 	maxFeatures = 4;
+	bIsStunned = false;
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -42,6 +43,29 @@ void AAzurukPlayerCharacter::Tick(float DeltaTime)
 
 	if (featureArray.IsValidIndex(inputFeature))
 	{
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Vitals
+
+bool AAzurukPlayerCharacter::IsStunned() const
+{
+	return bIsStunned;
+}
+
+void AAzurukPlayerCharacter::Die(float KillingDamage, struct FDamageEvent const& DamageEvent, class AController* Killer, class AActor* DamageCauser)
+{
+	if (CanDie(KillingDamage, DamageEvent, Killer, DamageCauser))
+	{
+		APlayerController* PC = Cast<APlayerController>(GetController());
+
+		if (PC)
+		{
+			bIsStunned = true;
+			GetWorld()->GetWorldSettings()->TimeDilation = deathTimeDilation;
+			DisableInput(PC);
+		}
 	}
 }
 
@@ -129,7 +153,7 @@ void AAzurukPlayerCharacter::StartDNACollect()
 {
 	if (CanCollectDNA())
 	{
-		characterState = COLLECTING;
+		characterState = DNACOLLECT;
 
 		float AnimDuration = PlayAnimMontage(DNAAnim);
 
@@ -167,9 +191,9 @@ void AAzurukPlayerCharacter::StartMorph(uint8 index)
 		{
 			characterState = MORPHING;
 
-			float AnimDuration = PlayAnimMontage(MorphAnim);
+			float AnimDuration = PlayAnimMontage(morphAnim);
 
-			GetWorldTimerManager().SetTimer(this, &AAzurukPlayerCharacter::StopMorph, AnimDuration, false);
+			GetWorldTimerManager().SetTimer(this, &AAzurukPlayerCharacter::StopMorph, AnimDuration - 0.1f, false);
 		}
 	}
 }
@@ -205,7 +229,7 @@ bool AAzurukPlayerCharacter::CanCollectDNA()
 void AAzurukPlayerCharacter::SetFeatures(uint8 index)
 {
 	featureArray[inputFeature]->SetFeatures(Mesh);
-	MorphAnim = featureArray[inputFeature]->ReturnMorphAnim();
+	morphAnim = featureArray[inputFeature]->ReturnMorphAnim();
 }
 
 void AAzurukPlayerCharacter::CheckActionInterupt()
@@ -214,7 +238,7 @@ void AAzurukPlayerCharacter::CheckActionInterupt()
 	{
 		switch (characterState)
 		{
-			case COLLECTING:
+			case DNACOLLECT:
 				GetWorldTimerManager().ClearTimer(this, &AAzurukPlayerCharacter::StopDNACollect);
 				break;
 			case MORPHING:

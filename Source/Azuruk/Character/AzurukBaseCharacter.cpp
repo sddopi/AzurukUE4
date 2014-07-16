@@ -9,7 +9,7 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 	: Super(PCIP)
 {
 	// Don't let Azuruk Characters die
-	InitialLifeSpan = 0;
+	InitialLifeSpan = 50.0f;
 
 	// Azuruk Defaults
 	Health = 100.f;
@@ -78,7 +78,7 @@ void AAzurukBaseCharacter::StopAllAnimMontages()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// Damage and Death
+// Vitals
 
 float AAzurukBaseCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
 {
@@ -166,6 +166,13 @@ void AAzurukBaseCharacter::SetRagdollPhysics()
 		CharacterMovement->DisableMovement();
 		CharacterMovement->SetComponentTickEnabled(false);
 	}	
+}
+
+void AAzurukBaseCharacter::Destroyed()
+{
+	Super::Destroyed();
+
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), deathParticle, GetActorLocation());
 }
 
 //////////////////////////////////////////////////////////////////////////

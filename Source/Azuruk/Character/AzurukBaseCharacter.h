@@ -4,6 +4,8 @@
 
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "ParticleDefinitions.h"
+#include "EngineKismetLibraryClasses.h"
 #include "Abilities/AzurukAbilityBase.h"
 #include "AzurukBaseCharacter.generated.h"
 
@@ -28,11 +30,14 @@ public:
 	UPROPERTY()
 	UAzurukCharacterFeatures* defaultCharacterFeature;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Azuruk Properties")
+	UPROPERTY(EditDefaultsOnly, Category = "Azuruk|Morphing")
 	float maxMorphTime;
 
-	UPROPERTY(EditDefaultsOnly, Category = Animation)
-	UAnimMontage* MorphAnim;
+	UPROPERTY(EditDefaultsOnly, Category = "Azuruk|Morphing")
+	UAnimMontage* morphAnim;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Azuruk|Vitals")
+	UParticleSystem* deathParticle;
 
 //////////////////////////////////////////////////////////////////////////
 // Animations
@@ -49,7 +54,7 @@ public:
 	void StopAllAnimMontages();
 
 //////////////////////////////////////////////////////////////////////////
-// Damage and Death
+// Vitals
 	
 	/* Take damage, handle death */
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) OVERRIDE;
@@ -68,8 +73,11 @@ public:
 	virtual void Die(float KillingDamage, struct FDamageEvent const& DamageEvent, class AController* Killer, class AActor* DamageCauser);
 
 	/** Identifies if pawn is in its dying state */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Azuruk|Death")
 	uint32 bIsDying : 1;
+
+	/* Destroyed */
+	virtual void Destroyed() OVERRIDE;
 
 private:
 

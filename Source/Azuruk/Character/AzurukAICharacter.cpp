@@ -28,4 +28,15 @@ void AAzurukAICharacter::FaceRotation(FRotator NewRotation, float DeltaTime)
 	Super::FaceRotation(CurrentRotation, DeltaTime);
 }
 
+void AAzurukAICharacter::Die(float KillingDamage, struct FDamageEvent const& DamageEvent, class AController* Killer, class AActor* DamageCauser)
+{	
+	AAzurukAIController* AC = Cast<AAzurukAIController>(GetController());
+
+	if (AC)
+	{
+		AC->SetInactive();
+	}
+	Super::Die(KillingDamage, DamageEvent, Killer, DamageCauser);
+}
+
 

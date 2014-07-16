@@ -32,14 +32,23 @@ void AAzurukAIController::Possess(APawn* InPawn)
 		BlackboardComp->InitializeBlackboard(AICharacter->BotBehavior->BlackboardAsset);
 
 		targetKeyID = BlackboardComp->GetKeyID("Target");
+		destKeyID = BlackboardComp->GetKeyID("Destination");
 
 		BehaviorComp->StartTree(AICharacter->BotBehavior);
 	}
 }
 
-void AAzurukAIController::BeginInactiveState()
+void AAzurukAIController::SetInactive()
 {
-	Super::BeginInactiveState();
+	// Stop the behaviour tree/logic
+	BehaviorComp->StopTree();
+
+	// Stop any movement we already have
+	StopMovement();
+
+	// Clear Blackboard Comp
+	SetTarget(NULL);
+	SetDestination(FVector(FVector::ZeroVector));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,6 +76,14 @@ void AAzurukAIController::SetTarget(AAzurukBaseCharacter* targetPawn)
 	if (BlackboardComp)
 	{
 		BlackboardComp->SetValueAsObject(targetKeyID, targetPawn);
+	}
+}
+
+void AAzurukAIController::SetDestination(FVector newDest)
+{
+	if (BlackboardComp)
+	{
+		BlackboardComp->SetValueAsVector(destKeyID, newDest);
 	}
 }
 
