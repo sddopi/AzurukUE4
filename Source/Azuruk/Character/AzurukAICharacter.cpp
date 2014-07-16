@@ -9,6 +9,8 @@ AAzurukAICharacter::AAzurukAICharacter(const class FPostConstructInitializePrope
 {
 	AIControllerClass = AAzurukAIController::StaticClass();
 
+	SensingComponent = PCIP.CreateDefaultSubobject<UAzurukSensingComponent>(this, TEXT("SensingComponent"));
+
 	wanderRadius = 500.0f;
 }
 

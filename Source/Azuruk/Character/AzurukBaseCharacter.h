@@ -20,6 +20,8 @@ public:
 	/* PostInitializeComponents */
 	virtual void PostInitializeComponents() OVERRIDE;
 
+	AAzurukBaseCharacter* GetBaseCharacter();
+
 //////////////////////////////////////////////////////////////////////////
 // Azuruk Properties
 

@@ -25,19 +25,22 @@ class AAzurukAIController : public AAIController
 
 	virtual void BeginInactiveState() OVERRIDE;
 
-	UFUNCTION(BlueprintCallable, Category = Behavior)
-	void SeeEnemy();
+//////////////////////////////////////////////////////////////////////////
+// Enemy and Targeting
 
-	void SetEnemy(class APawn* enemyPawn);
+	UFUNCTION(BlueprintCallable, Category = Behavior)
+	void SeeTarget();
+
+	void SetTarget(AAzurukBaseCharacter* targetPawn);
+
+//////////////////////////////////////////////////////////////////////////
+// 
 
 	AAzurukAICharacter* GetAICharacter() const;
 
-	AAzurukPlayerCharacter* GetPlayerCharacter() const;
-
 protected:
 
-	int32 enemyKeyID,
-		  destinationKeyID;
+	int32 targetKeyID;
 
 private:
 

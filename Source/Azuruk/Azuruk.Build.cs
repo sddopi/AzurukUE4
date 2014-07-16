@@ -9,12 +9,13 @@ public class Azuruk : ModuleRules
         PrivateIncludePaths.AddRange(
             new string[] { 
                 "Azuruk",
-				"Azuruk/Character",
-                "Azuruk/Controllers",
-                "Azuruk/UI",
                 "Azuruk/Abilities",
+                "Azuruk/BehaviourTree",
+				"Azuruk/Character",
+                "Azuruk/Components",
+                "Azuruk/Controllers",
                 "Azuruk/Effects",
-                "Azuruk/AI"
+                "Azuruk/UI",
             }
         );
 

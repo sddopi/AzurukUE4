@@ -31,7 +31,7 @@ void AAzurukAIController::Possess(APawn* InPawn)
 	{
 		BlackboardComp->InitializeBlackboard(AICharacter->BotBehavior->BlackboardAsset);
 
-		enemyKeyID = BlackboardComp->GetKeyID("Enemy");
+		targetKeyID = BlackboardComp->GetKeyID("Target");
 
 		BehaviorComp->StartTree(AICharacter->BotBehavior);
 	}
@@ -42,33 +42,37 @@ void AAzurukAIController::BeginInactiveState()
 	Super::BeginInactiveState();
 }
 
-void AAzurukAIController::SeeEnemy()
-{	
+//////////////////////////////////////////////////////////////////////////
+// Enemy and Targeting
+
+void AAzurukAIController::SeeTarget()
+{
+	AAzurukBaseCharacter* targetChar = nullptr;
+
+	for (FConstPawnIterator It = GetWorld()->GetPawnIterator(); It; ++It)
+	{
+		AAzurukBaseCharacter* TPawn = Cast<AAzurukBaseCharacter>(*It);
+
+		if (TPawn && TPawn->IsAlive() && TPawn != GetAICharacter()->GetBaseCharacter() &&
+			GetAICharacter()->SensingComponent->SensePawn(TPawn))
+		{
+			targetChar = TPawn;
+		}
+	}
+	SetTarget(targetChar);
 }
 
-void AAzurukAIController::SetEnemy(class APawn* enemyPawn)
+void AAzurukAIController::SetTarget(AAzurukBaseCharacter* targetPawn)
 {
 	if (BlackboardComp)
 	{
-		BlackboardComp->SetValueAsObject(enemyKeyID, enemyPawn);
+		BlackboardComp->SetValueAsObject(targetKeyID, targetPawn);
 	}
 }
 
 AAzurukAICharacter* AAzurukAIController::GetAICharacter() const
 {
 	return AICharacter;
-}
-
-AAzurukPlayerCharacter* AAzurukAIController::GetPlayerCharacter() const
-{
-	APlayerController* PlayerController = NULL;
-
-	if (GetWorld()->GetPlayerControllerIterator())
-	{
-		PlayerController = *(GetWorld()->GetPlayerControllerIterator());
-		return Cast<AAzurukPlayerCharacter>(PlayerController->GetPawn());
-	}
-	return nullptr;
 }
 
 

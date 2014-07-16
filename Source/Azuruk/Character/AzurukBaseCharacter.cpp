@@ -40,6 +40,11 @@ void AAzurukBaseCharacter::PostInitializeComponents()
 	}
 }
 
+AAzurukBaseCharacter* AAzurukBaseCharacter::GetBaseCharacter()
+{
+	return this;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Animations
 
