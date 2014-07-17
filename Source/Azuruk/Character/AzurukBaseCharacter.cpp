@@ -8,6 +8,8 @@ const uint8 DEFAULTFEATURE = uint8(0);
 AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
+	InitialLifeSpan = 0.0f;
+
 	// Azuruk Defaults
 	Health = 100.f;
 	maxMorphTime = 20.f;
