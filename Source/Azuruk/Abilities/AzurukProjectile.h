@@ -2,20 +2,21 @@
 
 #pragma once
 
-#include "AzurukAbilityProjectile.h"
+#include "Abilities/AzurukAbilityProjectile.h"
 #include "Effects/AzurukEffectExplosion.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "AzurukProjectile.generated.h"
 
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable, DependsOn = AAzurukAbilityProjectile)
+UCLASS(Abstract, Blueprintable)
 class AAzurukProjectile : public AActor
 {
 	GENERATED_UCLASS_BODY()
 
 	/** initial setup */
-	virtual void PostInitializeComponents() OVERRIDE;
+	virtual void PostInitializeComponents() override;
 
 	/** setup velocity */
 	void InitVelocity(FVector& ShootDirection);
@@ -62,5 +63,5 @@ protected:
 	void DisableAndDestroy();
 
 	/** update velocity on client */
-	virtual void PostNetReceiveVelocity(const FVector& NewVelocity) OVERRIDE;
+	virtual void PostNetReceiveVelocity(const FVector& NewVelocity) override;
 };

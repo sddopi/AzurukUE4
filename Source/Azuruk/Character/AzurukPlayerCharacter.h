@@ -42,13 +42,13 @@ class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 	TSubobjectPtr<class UCameraComponent> FollowCamera;
 
 	/* PostInitializeComponents */
-	virtual void PostInitializeComponents() OVERRIDE;
+	virtual void PostInitializeComponents() override;
 
 	/* Tick */
-	virtual void Tick(float DeltaTime) OVERRIDE;
+	virtual void Tick(float DeltaTime) override;
 
 	/* APawn interface */
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;
+	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 //////////////////////////////////////////////////////////////////////////
 // Azuruk Properties
@@ -83,7 +83,7 @@ public:
 	/*
 	* Kills pawn.
 	* 
-	* OVERRIDE - Stops player from dying (teleport map)
+	* override - Stops player from dying (teleport map)
 	*/
 	virtual void Die(float KillingDamage, struct FDamageEvent const& DamageEvent, class AController* Killer, class AActor* DamageCauser);
 

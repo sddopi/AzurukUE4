@@ -66,8 +66,13 @@ class AAzurukAbilityBase : public AActor
 {
 	GENERATED_UCLASS_BODY()
 
+	virtual void Tick(float DeltaTime) override;
+	virtual bool IsTickable() const;
+
+	virtual class UWorld* GetWorld() const override;
+
 	/** perform initial setup */
-	virtual void PostInitializeComponents() OVERRIDE;
+	virtual void PostInitializeComponents() override;
 
 //////////////////////////////////////////////////////////////////////////
 // Input

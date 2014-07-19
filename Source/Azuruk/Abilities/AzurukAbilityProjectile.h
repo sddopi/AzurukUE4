@@ -66,7 +66,7 @@ class AAzurukAbilityProjectile : public AAzurukAbilityBase
 protected:
 
 	/** ability specific usage implementation */
-	virtual void UseAbility() OVERRIDE;
+	virtual void UseAbility() override;
 
 	/** spawn projectile on server */
 	UFUNCTION(reliable, server, WithValidation)

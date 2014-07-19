@@ -30,7 +30,7 @@ class AAzurukHUD : public AHUD
 	GENERATED_UCLASS_BODY()
 
 	/* Main HUD update loop. */
-	virtual void DrawHUD() OVERRIDE;
+	virtual void DrawHUD() override;
 
 	/* Vital Background Icon */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health HUD")

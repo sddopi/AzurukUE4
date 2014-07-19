@@ -35,10 +35,10 @@ class AAzurukEffectExplosion : public AAzurukEffectBase
 	struct FDecalData Decal;
 
 	/** spawn explosion */
-	virtual void BeginPlay() OVERRIDE;
+	virtual void BeginPlay() override;
 
 	/** update fading light */
-	virtual void Tick(float DeltaSeconds) OVERRIDE;
+	virtual void Tick(float DeltaSeconds) override;
 
 private:
 
