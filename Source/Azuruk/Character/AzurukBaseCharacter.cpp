@@ -209,6 +209,7 @@ void AAzurukBaseCharacter::AddAbility(class AAzurukAbilityBase* Ability)
 {
 	if (Ability != NULL)
 	{
+		UE_LOG(LogTemp, Log, TEXT("ability added"));
 		Ability->OnAddAbility(this);
 		Abilities.AddUnique(Ability);
 	}
@@ -252,10 +253,13 @@ class AAzurukAbilityBase* AAzurukBaseCharacter::FindAbility(TSubclassOf<class AA
 
 class AAzurukAbilityBase* AAzurukBaseCharacter::FindAbilityBoundToKey(FString KeyBinding)
 {
+	UE_LOG(LogTemp, Log, TEXT("num abilities: %d"), Abilities.Num());
 	for (int32 i = 0; i < Abilities.Num(); i++)
 	{
+		UE_LOG(LogTemp, Log, TEXT("keybindings: %s, %s"), *KeyBinding, *Abilities[i]->GetKeyBinding());
 		if (Abilities[i] && Abilities[i]->GetKeyBinding() == KeyBinding)
 		{
+			UE_LOG(LogTemp, Log, TEXT("ability found"));
 			return Abilities[i];
 		}
 	}
@@ -268,8 +272,10 @@ void AAzurukBaseCharacter::StartAbility(FString KeyBinding)
 	if (bIsCasting == false) {
 		bIsCasting = true;
 		AAzurukAbilityBase* Ability = FindAbilityBoundToKey(KeyBinding);
+		UE_LOG(LogTemp, Log, TEXT("trying to use ability"));
 		if (Ability != NULL)
 		{
+			UE_LOG(LogTemp, Log, TEXT("ability not null"));
 			Ability->InputPressed();
 		}
 	}

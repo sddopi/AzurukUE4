@@ -22,3 +22,5 @@
 #define COLLISION_ABILITY		ECC_GameTraceChannel2
 #define COLLISION_PROJECTILE	ECC_GameTraceChannel3
 #define COLLISION_PIKCUP		ECC_GameTraceChannel4
+
+DECLARE_LOG_CATEGORY_EXTERN(TempLog, Log, All);

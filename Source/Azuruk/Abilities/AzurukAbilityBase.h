@@ -66,11 +66,6 @@ class AAzurukAbilityBase : public AActor
 {
 	GENERATED_UCLASS_BODY()
 
-	virtual void Tick(float DeltaTime);
-	virtual bool IsTickable() const;
-
-	virtual class UWorld* GetWorld() const OVERRIDE;
-
 	/** perform initial setup */
 	virtual void PostInitializeComponents() OVERRIDE;
 
@@ -94,6 +89,9 @@ class AAzurukAbilityBase : public AActor
 
 //////////////////////////////////////////////////////////////////////////
 // Events
+
+	/** tick event */
+	virtual void Tick(float DeltaTime) OVERRIDE;
 
 	/** ability was added to pawn */
 	virtual void OnAddAbility(class AAzurukBaseCharacter* NewOwner);

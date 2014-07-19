@@ -11,10 +11,24 @@ AAzurukAbilityBase::AAzurukAbilityBase(const class FPostConstructInitializePrope
 	bIsChanneled = false;
 	bIsCasted = false;
 	bIsInstant = false;
+
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bAllowTickOnDedicatedServer = true;
 }
+
+void AAzurukAbilityBase::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	OnAbilityInitialized();
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Events
 
 void AAzurukAbilityBase::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 	if (bIsOnCooldown)
 	{
 		CurrentCooldownTime += DeltaTime;
@@ -64,36 +78,6 @@ void AAzurukAbilityBase::Tick(float DeltaTime)
 	}
 }
 
-bool AAzurukAbilityBase::IsTickable() const
-{
-	if (AbilityOwner)
-	{
-		if (GetWorld())
-		{
-			return true;
-		}
-		return false;
-	}
-	return false;
-}
-
-UWorld* AAzurukAbilityBase::GetWorld() const
-{
-	if (!AbilityOwner)
-		return NULL;
-	UWorld* const World = GEngine->GetWorldFromContextObject(AbilityOwner);
-	return World ? World : nullptr;
-}
-
-void AAzurukAbilityBase::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-	OnAbilityInitialized();
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Events
-
 void AAzurukAbilityBase::OnAddAbility(AAzurukBaseCharacter* NewOwner)
 {
 	SetAbilityOwner(NewOwner);
@@ -106,6 +90,7 @@ void AAzurukAbilityBase::OnRemoveAbility()
 
 void AAzurukAbilityBase::OnAbilityStart()
 {
+	UE_LOG(LogTemp, Log, TEXT("ability started"));
 	UseAbility();
 
 	// reset boolean
@@ -117,6 +102,7 @@ void AAzurukAbilityBase::OnAbilityStart()
 
 void AAzurukAbilityBase::OnAbilityStop()
 {
+	UE_LOG(LogTemp, Log, TEXT("ability stopped"));
 	// reset boolean
 	if (bIsCasted)
 	{
@@ -132,6 +118,7 @@ void AAzurukAbilityBase::OnAbilityStop()
 
 void AAzurukAbilityBase::OnAbilityInitialized()
 {
+	UE_LOG(LogTemp, Log, TEXT("ability initialized"));
 	bIsAbilityInitialized = true;
 }
 
@@ -142,6 +129,7 @@ void AAzurukAbilityBase::InputPressed()
 {
 	if (bIsAbilityInitialized)
 	{
+		UE_LOG(LogTemp, Log, TEXT("ability pressed"));
 		if (!bIsOnCooldown)
 		{
 			if (AbilityConfig.AbilityCastType == ECastType::Casted)
@@ -160,6 +148,7 @@ void AAzurukAbilityBase::InputPressed()
 			}
 			if (AbilityConfig.AbilityCastType == ECastType::Instant)
 			{
+				OnAbilityStart();
 				bIsInstant = true;
 				bIsOnCooldown = true;
 			}
@@ -169,6 +158,7 @@ void AAzurukAbilityBase::InputPressed()
 
 void AAzurukAbilityBase::InputReleased()
 {
+	UE_LOG(LogTemp, Log, TEXT("ability released"));
 	if (AbilityConfig.AbilityCastType == ECastType::Channeled)
 	{
 		OnAbilityStop();

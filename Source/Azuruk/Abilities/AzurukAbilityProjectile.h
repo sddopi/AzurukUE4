@@ -43,7 +43,7 @@ struct FProjectileAbilityData
 /**
  * A ability that spawns a projectile from a socket on the pawn
  */
-UCLASS(Abstract, Blueprintable)
+UCLASS(BlueprintType, Blueprintable)
 class AAzurukAbilityProjectile : public AAzurukAbilityBase
 {
 	GENERATED_UCLASS_BODY()

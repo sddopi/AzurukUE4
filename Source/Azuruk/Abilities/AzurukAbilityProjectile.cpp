@@ -42,6 +42,10 @@ void AAzurukAbilityProjectile::UseAbility()
 	const float ProjectileAdjustRange = 10000.0f;
 	const FVector StartTrace = GetCameraDamageStartLocation(ShootDir);
 	const FVector EndTrace = StartTrace + ShootDir * ProjectileAdjustRange;
+	FString temp = FString::Printf(TEXT("(%f, %f, %f)"), StartTrace.X, StartTrace.Y, StartTrace.Z);
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, temp);
+	DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), true);
 	FHitResult Impact = AbilityTrace(StartTrace, EndTrace);
 
 	// and adjust directions to hit that actor
@@ -83,6 +87,7 @@ void AAzurukAbilityProjectile::UseAbility()
 		}
 	}
 
+	UE_LOG(LogTemp, Log, TEXT("ability used"));
 	ServerFireProjectile(Origin, ShootDir);
 }
 
@@ -102,6 +107,7 @@ void AAzurukAbilityProjectile::ServerFireProjectile_Implementation(FVector Origi
 		Projectile->InitVelocity(ShootDir);
 
 		UGameplayStatics::FinishSpawningActor(Projectile, SpawnTM);
+		UE_LOG(LogTemp, Log, TEXT("projectile spawned"));
 	}
 }
 
@@ -156,7 +162,7 @@ FVector AAzurukAbilityProjectile::GetAdjustedAim() const
 
 FVector AAzurukAbilityProjectile::GetCameraDamageStartLocation(const FVector& AimDir) const
 {
-	AAzurukPlayerController* PC = AbilityOwner ? Cast<AAzurukPlayerController>(AbilityOwner->Controller) : NULL;
+	AAzurukPlayerController* PC = Cast<AAzurukPlayerController>(AbilityOwner->Controller);
 	AAzurukAIController* AIPC = AbilityOwner ? Cast<AAzurukAIController>(AbilityOwner->Controller) : NULL;
 	FVector OutStartTrace = FVector::ZeroVector;
 
@@ -164,7 +170,8 @@ FVector AAzurukAbilityProjectile::GetCameraDamageStartLocation(const FVector& Ai
 	{
 		// use player's camera
 		FRotator UnusedRot;
-		PC->GetPlayerViewPoint(OutStartTrace, UnusedRot);
+		OutStartTrace = PC->PlayerCameraManager->GetCameraLocation();
+		UnusedRot = PC->PlayerCameraManager->GetCameraRotation();
 
 		// Adjust trace so there is nothing blocking the ray between the camera and the pawn, and calculate distance from adjusted start
 		OutStartTrace = OutStartTrace + AimDir * ((Instigator->GetActorLocation() - OutStartTrace) | AimDir);

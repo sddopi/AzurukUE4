@@ -124,6 +124,7 @@ public:
 	*
 	* @param Ability Ability to add.
 	*/
+	UFUNCTION(BlueprintCallable, Category = "Ability")
 	void AddAbility(class AAzurukAbilityBase* Ability);
 
 	/**
@@ -131,11 +132,13 @@ public:
 	*
 	* @param Ability Ability to remove.
 	*/
+	UFUNCTION(BlueprintCallable, Category = "Ability")
 	void RemoveAbility(class AAzurukAbilityBase* Ability);
 
 	/**
 	* destroy all abilities in array
 	*/
+	UFUNCTION(BlueprintCallable, Category = "Ability")
 	void DestroyAbilities();
 
 	/**
