@@ -7,7 +7,6 @@
 AAzurukPlayerController::AAzurukPlayerController(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-
+	//PlayerCameraManagerClass = AAzurukPlayerCameraManager::StaticClass();
 }
-
 

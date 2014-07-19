@@ -115,10 +115,11 @@ class AAzurukAbilityBase : public AActor
 public:
 
 	/** set the owner of the ability */
-	void  SetAbilityOwner(class AAzurukBaseCharacter* Owner);
+	UFUNCTION(BlueprintCallable, Category = "Ability|Data")
+	void  SetAbilityOwner(class AAzurukBaseCharacter* NewOwner);
 
 	/** get owner mesh */
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Ability|Data")
 	USkeletalMeshComponent* GetOwnerMesh() const;
 
 protected:

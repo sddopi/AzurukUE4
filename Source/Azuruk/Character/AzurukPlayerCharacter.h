@@ -99,6 +99,28 @@ private:
 	void MoveRight(float Amount);
 
 //////////////////////////////////////////////////////////////////////////
+// Camera
+
+public:
+
+	UFUNCTION(BlueprintCallable, Category = "Azuruk|Camera")
+	virtual void SetCameraOffsetDistance(float NewOffset);
+
+	UFUNCTION(BlueprintCallable, Category = "Azuruk|Camera")
+	virtual float GetCameraOffsetDistance();
+
+	UFUNCTION(BlueprintCallable, Category = "Azuruk|Camera")
+	virtual FVector GetCameraLocation();
+
+	/*UFUNCTION(BlueprintCallable, Category = "Azuruk|Camera")
+	virtual FRotator GetCameraRotation();*/
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Azuruk|Camera")
+	float CameraOffsetDistance;
+
+//////////////////////////////////////////////////////////////////////////
 // Use Objects
 
 public:

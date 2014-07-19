@@ -13,6 +13,9 @@ AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitial
 	maxFeatures = 4;
 	bIsStunned = false;
 
+	// Camera defaults
+	CameraOffsetDistance = 300.f;
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -117,6 +120,29 @@ void AAzurukPlayerCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Camera
+
+void AAzurukPlayerCharacter::SetCameraOffsetDistance(float NewOffset)
+{
+	CameraOffsetDistance = NewOffset;
+}
+
+float AAzurukPlayerCharacter::GetCameraOffsetDistance()
+{
+	return CameraOffsetDistance;
+}
+
+FVector AAzurukPlayerCharacter::GetCameraLocation()
+{
+	return FollowCamera->GetComponentLocation();
+}
+
+//FRotator AAzurukPlayerCharacter::GetCameraRotation()
+//{
+//	return FollowCamera->GetControlRotation();
+//}
 
 //////////////////////////////////////////////////////////////////////////
 // Use Objects

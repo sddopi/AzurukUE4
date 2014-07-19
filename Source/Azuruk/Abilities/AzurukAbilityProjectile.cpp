@@ -44,7 +44,6 @@ void AAzurukAbilityProjectile::UseAbility()
 	const FVector EndTrace = StartTrace + ShootDir * ProjectileAdjustRange;
 	FString temp = FString::Printf(TEXT("(%f, %f, %f)"), StartTrace.X, StartTrace.Y, StartTrace.Z);
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, temp);
 	DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), true);
 	FHitResult Impact = AbilityTrace(StartTrace, EndTrace);
 
@@ -87,6 +86,7 @@ void AAzurukAbilityProjectile::UseAbility()
 		}
 	}
 
+	DrawDebugLine(GetWorld(), Origin, EndTrace, FColor(0, 255, 0), true);
 	UE_LOG(LogTemp, Log, TEXT("ability used"));
 	ServerFireProjectile(Origin, ShootDir);
 }
@@ -162,24 +162,24 @@ FVector AAzurukAbilityProjectile::GetAdjustedAim() const
 
 FVector AAzurukAbilityProjectile::GetCameraDamageStartLocation(const FVector& AimDir) const
 {
-	AAzurukPlayerController* PC = Cast<AAzurukPlayerController>(AbilityOwner->Controller);
+	AAzurukPlayerCharacter* PC = Cast<AAzurukPlayerCharacter>(AbilityOwner);
 	AAzurukAIController* AIPC = AbilityOwner ? Cast<AAzurukAIController>(AbilityOwner->Controller) : NULL;
 	FVector OutStartTrace = FVector::ZeroVector;
 
-	if (PC)
-	{
+	/*if (PC)
+	{*/
 		// use player's camera
 		FRotator UnusedRot;
-		OutStartTrace = PC->PlayerCameraManager->GetCameraLocation();
-		UnusedRot = PC->PlayerCameraManager->GetCameraRotation();
+		OutStartTrace = PC->GetCameraLocation();
+		UnusedRot = PC->GetControlRotation();
 
 		// Adjust trace so there is nothing blocking the ray between the camera and the pawn, and calculate distance from adjusted start
 		OutStartTrace = OutStartTrace + AimDir * ((Instigator->GetActorLocation() - OutStartTrace) | AimDir);
-	}
+	/*}
 	else if (AIPC)
 	{
 		OutStartTrace = GetAttachLocation();
-	}
+	}*/
 
 	return OutStartTrace;
 }
