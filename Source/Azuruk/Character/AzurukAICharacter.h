@@ -4,6 +4,7 @@
 
 #include "Character/AzurukBaseCharacter.h"
 #include "Components/AzurukSensingComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "AzurukAICharacter.generated.h"
 
 /**
@@ -28,14 +29,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Azuruk|AI")
 	float wanderRadius;
 
-	virtual void PostInitializeComponents() OVERRIDE;
+	virtual void PostInitializeComponents() override;
 
-	virtual void FaceRotation(FRotator NewRotation, float DeltaTime = 0.f) OVERRIDE;
+	virtual void FaceRotation(FRotator NewRotation, float DeltaTime = 0.f) override;
 
 	/*
 	* Kills pawn.
 	*
-	* OVERRIDE - Deactivate Behaviour
+	* override - Deactivate Behaviour
 	*/
 	virtual void Die(float KillingDamage, struct FDamageEvent const& DamageEvent, class AController* Killer, class AActor* DamageCauser);
 

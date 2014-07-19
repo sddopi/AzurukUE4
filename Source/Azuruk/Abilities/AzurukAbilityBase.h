@@ -69,10 +69,10 @@ class AAzurukAbilityBase : public AActor
 	virtual void Tick(float DeltaTime);
 	virtual bool IsTickable() const;
 
-	virtual class UWorld* GetWorld() const OVERRIDE;
+	virtual class UWorld* GetWorld() const override;
 
 	/** perform initial setup */
-	virtual void PostInitializeComponents() OVERRIDE;
+	virtual void PostInitializeComponents() override;
 
 //////////////////////////////////////////////////////////////////////////
 // Input

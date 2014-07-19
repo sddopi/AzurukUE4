@@ -5,7 +5,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "ParticleDefinitions.h"
-#include "EngineKismetLibraryClasses.h"
+#include "Kismet/GameplayStatics.h"
 #include "Abilities/AzurukAbilityBase.h"
 #include "AzurukBaseCharacter.generated.h"
 
@@ -20,7 +20,7 @@ class AAzurukBaseCharacter : public ACharacter
 public:
 
 	/* PostInitializeComponents */
-	virtual void PostInitializeComponents() OVERRIDE;
+	virtual void PostInitializeComponents() override;
 
 	AAzurukBaseCharacter* GetBaseCharacter();
 
@@ -45,10 +45,10 @@ public:
 public:
 	
 	/* play anim montage */
-	virtual float PlayAnimMontage(class UAnimMontage* AnimMontage, float InPlayRate = 1.f, FName StartSectionName = NAME_None) OVERRIDE;
+	virtual float PlayAnimMontage(class UAnimMontage* AnimMontage, float InPlayRate = 1.f, FName StartSectionName = NAME_None) override;
 
 	/* stop playing montage */
-	virtual void StopAnimMontage(class UAnimMontage* AnimMontage) OVERRIDE;
+	virtual void StopAnimMontage(class UAnimMontage* AnimMontage) override;
 
 	/* stop playing all montages */
 	void StopAllAnimMontages();
@@ -57,7 +57,7 @@ public:
 // Vitals
 	
 	/* Take damage, handle death */
-	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) OVERRIDE;
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
 
 	/** Returns True if the pawn can die in the current state */
 	virtual bool CanDie(float KillingDamage, FDamageEvent const& DamageEvent, AController* Killer, AActor* DamageCauser) const;
@@ -77,7 +77,7 @@ public:
 	uint32 bIsDying : 1;
 
 	/* Destroyed */
-	virtual void Destroyed() OVERRIDE;
+	virtual void Destroyed() override;
 
 private:
 
@@ -173,7 +173,7 @@ public:
 public:
 
 	/** setup pawn specific input handlers */
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) OVERRIDE;
+	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 	/* Button one */
 	void AbilityButtonOne();

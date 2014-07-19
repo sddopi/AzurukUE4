@@ -21,7 +21,7 @@ UAzurukCharacterFeatures::UAzurukCharacterFeatures(const class FPostConstructIni
 void UAzurukCharacterFeatures::SetFeatures(USkeletalMeshComponent* PassedMesh)
 {
 	PassedMesh->SetSkeletalMesh(featureMesh);
-	PassedMesh->SetAnimClass(featureAnimInstance);
+	PassedMesh->SetAnimInstanceClass(featureAnimInstance);
 }
 
 UAnimMontage* UAzurukCharacterFeatures::ReturnMorphAnim()

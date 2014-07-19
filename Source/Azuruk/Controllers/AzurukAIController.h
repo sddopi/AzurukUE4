@@ -2,7 +2,9 @@
 
 #pragma once
 
-#include "GameFramework/AIController.h"
+#include "Classes/AIController.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "AzurukAIController.generated.h"
 
 /**
@@ -19,9 +21,9 @@ class AAzurukAIController : public AAIController
 	UPROPERTY(transient)
 	TSubobjectPtr<class UBehaviorTreeComponent> BehaviorComp;
 
-	virtual void PostInitializeComponents() OVERRIDE;
+	virtual void PostInitializeComponents() override;
 
-	virtual void Possess(class APawn* InPawn) OVERRIDE;
+	virtual void Possess(class APawn* InPawn) override;
 
 	virtual void SetInactive();
 
