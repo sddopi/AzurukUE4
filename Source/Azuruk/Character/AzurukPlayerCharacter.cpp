@@ -254,8 +254,7 @@ bool AAzurukPlayerCharacter::CanCollectDNA()
 
 void AAzurukPlayerCharacter::SetFeatures(uint8 index)
 {
-	featureArray[inputFeature]->SetFeatures(Mesh);
-	morphAnim = featureArray[inputFeature]->ReturnMorphAnim();
+	featureArray[inputFeature]->SetFeatures(this);
 }
 
 void AAzurukPlayerCharacter::CheckActionInterupt()

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "GameFramework/PlayerController.h"
-#include "Character/AzurukPlayerCameraManager.h"
 #include "AzurukPlayerController.generated.h"
 
 /**

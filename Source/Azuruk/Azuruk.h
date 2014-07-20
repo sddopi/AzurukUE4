@@ -8,7 +8,7 @@
 #include "Net/UnrealNetwork.h"
 #include "GameFramework/Actor.h"
 #include "Abilities/AzurukAbilityBase.h"
-#include "Character/AzurukCharacterFeatures.h"
+#include "Objects/AzurukCharacterFeatures.h"
 #include "Character/AzurukBaseCharacter.h"
 #include "Character/AzurukPlayerCharacter.h"
 #include "Character/AzurukAICharacter.h"

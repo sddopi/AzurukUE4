@@ -12,21 +12,21 @@ UAzurukCharacterFeatures::UAzurukCharacterFeatures(const class FPostConstructIni
 	{
 		featureMesh = outerChar->Mesh->SkeletalMesh;
 		featureAnimInstance = outerChar->Mesh->GetAnimInstance()->GetClass();
-		featureMorph = outerChar->morphAnim;
+		featureMorphAnim = outerChar->morphAnim;
 		featureTime = outerChar->maxMorphTime;
-		featureMultiplier = 1.0f;
 	}
 }
 
-void UAzurukCharacterFeatures::SetFeatures(USkeletalMeshComponent* PassedMesh)
+void UAzurukCharacterFeatures::SetFeatures(AAzurukBaseCharacter* PassedCharacter)
 {
-	PassedMesh->SetSkeletalMesh(featureMesh);
-	PassedMesh->SetAnimInstanceClass(featureAnimInstance);
+	PassedCharacter->Mesh->SetSkeletalMesh(featureMesh);
+	PassedCharacter->Mesh->SetAnimInstanceClass(featureAnimInstance);
+	PassedCharacter->morphAnim = featureMorphAnim;
 }
 
 UAnimMontage* UAzurukCharacterFeatures::ReturnMorphAnim()
 {
-	return featureMorph;
+	return featureMorphAnim;
 }
 
 bool UAzurukCharacterFeatures::EqualFeatures(USkeletalMeshComponent* Mesh)
@@ -36,21 +36,11 @@ bool UAzurukCharacterFeatures::EqualFeatures(USkeletalMeshComponent* Mesh)
 
 bool UAzurukCharacterFeatures::NotNull()
 {
-	return featureMesh != nullptr || featureAnimInstance != nullptr || featureMorph != nullptr;
+	return featureMesh != nullptr || featureAnimInstance != nullptr || featureMorphAnim != nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Feature Time
-
-void UAzurukCharacterFeatures::IncreaseFeatureTime()
-{
-	featureTime = FMath::Min(featureTime - featureMultiplier, ReturnFeatureTime());
-}
-
-void UAzurukCharacterFeatures::DecreaseFeatureTime()
-{
-	featureTime = FMath::Max(featureTime - featureMultiplier, 0.0f);
-}
 
 float UAzurukCharacterFeatures::ReturnFeatureTime()
 {

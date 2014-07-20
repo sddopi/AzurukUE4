@@ -10,11 +10,12 @@ public class Azuruk : ModuleRules
             new string[] { 
                 "Azuruk",
                 "Azuruk/Abilities",
-                "Azuruk/AI",
+                "Azuruk/BehaviourTree",
 				"Azuruk/Character",
                 "Azuruk/Components",
                 "Azuruk/Controllers",
                 "Azuruk/Effects",
+                "Azuruk/Objects",
                 "Azuruk/UI",
             }
         );

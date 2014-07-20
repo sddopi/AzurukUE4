@@ -17,7 +17,7 @@ class UAzurukCharacterFeatures : public UObject
 // Features
 
 	/* */
-	void SetFeatures(USkeletalMeshComponent* PassedMesh);
+	void SetFeatures(AAzurukBaseCharacter* PassedCharacter);
 
 	/* Checks if passed features are the same as current */
 	bool EqualFeatures(USkeletalMeshComponent* Mesh);
@@ -30,12 +30,6 @@ class UAzurukCharacterFeatures : public UObject
 
 //////////////////////////////////////////////////////////////////////////
 // Feature Time
-
-	/*  */
-	void IncreaseFeatureTime();
-
-	/*  */
-	void DecreaseFeatureTime();
 
 	/* Return Morph Time */
 	float ReturnFeatureTime();
@@ -52,11 +46,8 @@ protected:
 	UClass* featureAnimInstance;
 
 	UPROPERTY()
-	UAnimMontage* featureMorph;
+	UAnimMontage* featureMorphAnim;
 
 	UPROPERTY()
 	float featureTime;
-
-	UPROPERTY()
-	float featureMultiplier;
 };
