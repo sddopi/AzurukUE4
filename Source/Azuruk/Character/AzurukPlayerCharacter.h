@@ -3,6 +3,7 @@
 #pragma once
 
 #include "AzurukBaseCharacter.h"
+#include "Components/AzurukMorphingComponent.h"
 #include "AzurukPlayerCharacter.generated.h"
 
 namespace EFeatureName
@@ -33,6 +34,10 @@ class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 {
 	GENERATED_UCLASS_BODY()
 
+	/* Morphing Component for switching features */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Morphing)
+	TSubobjectPtr<class UAzurukMorphingComponent> MorphComp;
+
 	/* Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	TSubobjectPtr<class USpringArmComponent> CameraBoom;
@@ -53,14 +58,17 @@ class AAzurukPlayerCharacter : public AAzurukBaseCharacter
 //////////////////////////////////////////////////////////////////////////
 // Azuruk Properties
 
-protected:
+	/* */
+	bool InIdleStates();
 
-	UPROPERTY(EditDefaultsOnly, Category = Animation)
-	UAnimMontage* DNAAnim;
+protected:
 
 	/*  */
 	UPROPERTY()
 	TEnumAsByte<enum ECharacterState> characterState;
+
+	UPROPERTY(EditDefaultsOnly, Category = Animation)
+	UAnimMontage* DNAAnim;
 
 //////////////////////////////////////////////////////////////////////////
 // Vitals
@@ -151,8 +159,8 @@ private:
 public:
 
 	/* Dynamic Mesh Features Array */
-	UPROPERTY()
-	TArray<UAzurukCharacterFeatures*> featureArray;
+	//UPROPERTY()
+	//TArray<UAzurukCharacterFeatures*> featureArray;
 
 	/* */
 	void SetDefaultFeatures();
@@ -176,9 +184,6 @@ private:
 	/*  */
 	bool CanCollectDNA();
 
-	/* Adds features to features array */
-	void AddFeatures(UAzurukCharacterFeatures* NewFeat);
-
 	/* MorphOne and MorphTwo call SetFeatures with Index */
 	void MorphOne();
 	void MorphTwo();
@@ -188,12 +193,6 @@ private:
 
 	/*  */
 	void StopMorph();
-
-	/*  */
-	bool CanMorph();
-
-	/* Sets current features to new mesh */
-	void SetFeatures(uint8 index);
 
 	/*  */
 	void CheckActionInterupt();

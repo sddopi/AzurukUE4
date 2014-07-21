@@ -27,7 +27,6 @@ public:
 //////////////////////////////////////////////////////////////////////////
 // Azuruk Properties
 
-	UPROPERTY()
 	UAzurukCharacterFeatures* defaultCharacterFeature;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Azuruk|Morphing")

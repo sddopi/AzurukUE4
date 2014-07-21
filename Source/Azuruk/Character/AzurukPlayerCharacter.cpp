@@ -21,6 +21,9 @@ AAzurukPlayerCharacter::AAzurukPlayerCharacter(const class FPostConstructInitial
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
+	//
+	MorphComp = PCIP.CreateDefaultSubobject<UAzurukMorphingComponent>(this, TEXT("MorphComp"));
+
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = PCIP.CreateDefaultSubobject<USpringArmComponent>(this, TEXT("CameraBoom"));
 	CameraBoom->AttachTo(RootComponent);
@@ -37,16 +40,19 @@ void AAzurukPlayerCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	AddFeatures(defaultCharacterFeature);
+	MorphComp->AddMorph(defaultCharacterFeature);
 }
 
 void AAzurukPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
 
-	if (featureArray.IsValidIndex(inputFeature))
-	{
-	}
+bool AAzurukPlayerCharacter::InIdleStates()
+{
+	return (CharacterMovement->MovementMode == EMovementMode::MOVE_Falling ||
+			CharacterMovement->MovementMode == EMovementMode::MOVE_Walking) &&
+			characterState == IDLE;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -166,7 +172,7 @@ void AAzurukPlayerCharacter::UseObject()
 
 	AAzurukBaseCharacter* tAChar = Cast<AAzurukBaseCharacter>(usedActor);
 
-	if (tAChar && tAChar->bIsDying && !featureArray.Contains(tAChar->defaultCharacterFeature))
+	if (tAChar && tAChar->bIsDying && !(MorphComp->ContainsMorph(tAChar->defaultCharacterFeature)))
 	{
 		StartDNACollect();
 	}
@@ -190,16 +196,8 @@ void AAzurukPlayerCharacter::StartDNACollect()
 void AAzurukPlayerCharacter::StopDNACollect()
 {
 	characterState = IDLE;
-	AddFeatures(Cast<AAzurukBaseCharacter>(usedActor)->defaultCharacterFeature);
+	MorphComp->AddMorph(Cast<AAzurukBaseCharacter>(usedActor)->defaultCharacterFeature);
 	usedActor->Destroy();
-}
-
-void AAzurukPlayerCharacter::AddFeatures(UAzurukCharacterFeatures* NewFeat)
-{
-	if (NewFeat->NotNull() && !featureArray.Contains(NewFeat))
-	{
-		featureArray.Add(NewFeat);
-	}
 }
 
 void AAzurukPlayerCharacter::MorphOne()	{ StartMorph( EFeatureName::FeatureOne ); }
@@ -207,40 +205,24 @@ void AAzurukPlayerCharacter::MorphTwo() { StartMorph( EFeatureName::FeatureTwo )
 
 void AAzurukPlayerCharacter::StartMorph(uint8 index)
 {
-	if (characterState == IDLE && featureArray.IsValidIndex(index))
+	if (MorphComp->CanMorph(index))
 	{
-		inputFeature = featureArray[index]->EqualFeatures(Mesh) ?
-					   EFeatureName::FeatureDefault				:
+		characterState = MORPHING;
+
+		inputFeature = inputFeature == index ?
+					   EFeatureName::FeatureDefault :
 					   index;
 
-		if (CanMorph())
-		{
-			characterState = MORPHING;
+		float AnimDuration = PlayAnimMontage(morphAnim);
 
-			float AnimDuration = PlayAnimMontage(morphAnim);
-
-			GetWorldTimerManager().SetTimer(this, &AAzurukPlayerCharacter::StopMorph, AnimDuration - 0.1f, false);
-		}
+		GetWorldTimerManager().SetTimer(this, &AAzurukPlayerCharacter::StopMorph, AnimDuration, false);
 	}
 }
 
 void AAzurukPlayerCharacter::StopMorph()
 {
-	SetFeatures(inputFeature);
+	MorphComp->SetMorph(inputFeature);
 	characterState = IDLE;
-}
-
-bool AAzurukPlayerCharacter::CanMorph()
-{
-	if (featureArray.IsValidIndex(inputFeature))
-	{
-		bool bIsCorrectStates = (CharacterMovement->MovementMode == EMovementMode::MOVE_Falling ||
-								 CharacterMovement->MovementMode == EMovementMode::MOVE_Walking) &&
-								 characterState == IDLE;
-
-		return bIsCorrectStates;
-	}
-	return false;
 }
 
 bool AAzurukPlayerCharacter::CanCollectDNA()
@@ -248,13 +230,8 @@ bool AAzurukPlayerCharacter::CanCollectDNA()
 	bool bIsCorrectStates = (CharacterMovement->MovementMode == EMovementMode::MOVE_Falling ||
 							 CharacterMovement->MovementMode == EMovementMode::MOVE_Walking) &&
 							 characterState == IDLE;
-	bool bFeaturesFull = featureArray.Num() == maxFeatures;
-	return bIsCorrectStates && !bFeaturesFull;
-}
-
-void AAzurukPlayerCharacter::SetFeatures(uint8 index)
-{
-	featureArray[inputFeature]->SetFeatures(this);
+	//bool bFeaturesFull = featureArray.Num() == maxFeatures;
+	return bIsCorrectStates;
 }
 
 void AAzurukPlayerCharacter::CheckActionInterupt()

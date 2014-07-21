@@ -2,52 +2,32 @@
 
 #pragma once
 
-#include "Object.h"
-#include "AzurukCharacterFeatures.generated.h"
-
 /**
  * 
  */
-UCLASS()
-class UAzurukCharacterFeatures : public UObject
+class AZURUK_API UAzurukCharacterFeatures
 {
-	GENERATED_UCLASS_BODY()
+public:
 
-//////////////////////////////////////////////////////////////////////////
-// Features
+	UAzurukCharacterFeatures(USkeletalMesh* SkelMesh, UClass* AnimInstance, UAnimMontage* MorphAnim);
 
-	/* */
-	void SetFeatures(AAzurukBaseCharacter* PassedCharacter);
+	~UAzurukCharacterFeatures();
 
-	/* Checks if passed features are the same as current */
-	bool EqualFeatures(USkeletalMeshComponent* Mesh);
+	USkeletalMesh* featureSkelMesh;
 
-	/* Checks if feature is null */
-	bool NotNull();
-
-	/*  */
-	UAnimMontage* ReturnMorphAnim();
-
-//////////////////////////////////////////////////////////////////////////
-// Feature Time
-
-	/* Return Morph Time */
-	float ReturnFeatureTime();
-
-	/* Returns Max Morph Time */
-	float ReturnMaxFeatureTime() const;
-
-protected:
-
-	UPROPERTY()
-	USkeletalMesh* featureMesh;
-
-	UPROPERTY()
 	UClass* featureAnimInstance;
 
-	UPROPERTY()
 	UAnimMontage* featureMorphAnim;
 
-	UPROPERTY()
 	float featureTime;
+
+	void SetIsMorph(bool newBool, float time);
+
+	bool IsMorph();
+
+	bool NotNull();
+
+private:
+
+	bool isMorphObject;
 };

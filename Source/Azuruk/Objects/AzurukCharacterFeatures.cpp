@@ -3,54 +3,33 @@
 #include "Azuruk.h"
 #include "AzurukCharacterFeatures.h"
 
-UAzurukCharacterFeatures::UAzurukCharacterFeatures(const class FPostConstructInitializeProperties& PCIP)
-	: Super(PCIP)
+UAzurukCharacterFeatures::UAzurukCharacterFeatures(USkeletalMesh* SkelMesh, UClass* AnimInstance, UAnimMontage* MorphAnim)
 {
-	AAzurukBaseCharacter* outerChar = Cast<AAzurukBaseCharacter>(GetOuter());
-
-	if (outerChar)
-	{
-		featureMesh = outerChar->Mesh->SkeletalMesh;
-		featureAnimInstance = outerChar->Mesh->GetAnimInstance()->GetClass();
-		featureMorphAnim = outerChar->morphAnim;
-		featureTime = outerChar->maxMorphTime;
-	}
+	featureSkelMesh = SkelMesh;
+	featureAnimInstance = AnimInstance;
+	featureMorphAnim = MorphAnim;
+	featureTime = 0.f;
+	isMorphObject = false;
 }
 
-void UAzurukCharacterFeatures::SetFeatures(AAzurukBaseCharacter* PassedCharacter)
+UAzurukCharacterFeatures::~UAzurukCharacterFeatures()
 {
-	PassedCharacter->Mesh->SetSkeletalMesh(featureMesh);
-	PassedCharacter->Mesh->SetAnimInstanceClass(featureAnimInstance);
-	PassedCharacter->morphAnim = featureMorphAnim;
 }
 
-UAnimMontage* UAzurukCharacterFeatures::ReturnMorphAnim()
+void UAzurukCharacterFeatures::SetIsMorph(bool newBool, float time)
 {
-	return featureMorphAnim;
+	isMorphObject = newBool;
+	featureTime = time;
 }
 
-bool UAzurukCharacterFeatures::EqualFeatures(USkeletalMeshComponent* Mesh)
+bool UAzurukCharacterFeatures::IsMorph()
 {
-	return Mesh->SkeletalMesh == featureMesh || Mesh->GetAnimInstance()->GetClass() == featureAnimInstance;
+	return isMorphObject;
 }
 
 bool UAzurukCharacterFeatures::NotNull()
 {
-	return featureMesh != nullptr || featureAnimInstance != nullptr || featureMorphAnim != nullptr;
+	return featureSkelMesh != nullptr &&
+		   featureAnimInstance != nullptr &&
+		   featureMorphAnim != nullptr;
 }
-
-//////////////////////////////////////////////////////////////////////////
-// Feature Time
-
-float UAzurukCharacterFeatures::ReturnFeatureTime()
-{
-	return featureTime;
-}
-
-float UAzurukCharacterFeatures::ReturnMaxFeatureTime() const
-{
-	return GetClass()->GetDefaultObject<UAzurukCharacterFeatures>()->ReturnFeatureTime();
-}
-
-
-

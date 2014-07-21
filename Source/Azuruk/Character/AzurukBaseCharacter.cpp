@@ -28,7 +28,7 @@ void AAzurukBaseCharacter::PostInitializeComponents()
 
 	if (Mesh->SkeletalMesh && Mesh->GetAnimInstance())
 	{
-		defaultCharacterFeature = NewObject<UAzurukCharacterFeatures>(this, UAzurukCharacterFeatures::StaticClass());
+		defaultCharacterFeature = new UAzurukCharacterFeatures(Mesh->SkeletalMesh, Mesh->GetAnimInstance()->GetClass(), morphAnim);
 	}	
 
 	if (Role = ROLE_Authority)
@@ -168,6 +168,11 @@ void AAzurukBaseCharacter::SetRagdollPhysics()
 void AAzurukBaseCharacter::Destroyed()
 {
 	Super::Destroyed();
+
+	if (!(defaultCharacterFeature->IsMorph()))
+	{
+		delete defaultCharacterFeature;
+	}
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), deathParticle, GetActorLocation());
 }
