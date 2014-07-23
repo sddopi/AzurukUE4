@@ -116,11 +116,15 @@ public:
 
 	/** set the owner of the ability */
 	UFUNCTION(BlueprintCallable, Category = "Ability|Data")
-	void  SetAbilityOwner(class AAzurukBaseCharacter* NewOwner);
+	void SetAbilityOwner(class AAzurukBaseCharacter* NewOwner);
 
 	/** get owner mesh */
 	UFUNCTION(BlueprintCallable, Category = "Ability|Data")
 	USkeletalMeshComponent* GetOwnerMesh() const;
+
+	/** return whether or not the ability can be used right now */
+	UFUNCTION(BlueprintCallable, Category = "Ability|Data")
+	bool CanUse();
 
 protected:
 

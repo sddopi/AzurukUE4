@@ -226,6 +226,17 @@ USkeletalMeshComponent* AAzurukAbilityBase::GetOwnerMesh() const
 	return UseMesh;
 }
 
+bool AAzurukAbilityBase::CanUse()
+{
+	if (bIsOnCooldown) {
+		return false;
+	}
+	else 
+	{
+		return true;
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Ability Usage
 
