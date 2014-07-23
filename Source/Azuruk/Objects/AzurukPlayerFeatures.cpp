@@ -6,12 +6,14 @@
 UAzurukPlayerFeatures::UAzurukPlayerFeatures(const class FPostConstructInitializeProperties& PCIP)
 	: Super(PCIP)
 {
-	UAzurukMorphingComponent* OwnerComp = Cast<UAzurukMorphingComponent>(GetOuter());
+	OwnerComp = Cast<UAzurukMorphingComponent>(GetOuter());
 
 	if (OwnerComp)
 	{
+		morphTimeMultiplier = OwnerComp->morphTimeMultiplier;
 		maxmorphTime = OwnerComp->defaultMorphTime;
 		morphTime = maxmorphTime;
+		morphActive = false;
 	}
 }
 
@@ -29,7 +31,7 @@ void UAzurukPlayerFeatures::PassCharacterFeatures(class AAzurukPlayerCharacter* 
 	MorphOwner->SetMorphAnim(morphMorphAnim);
 }
 
-void UAzurukPlayerFeatures::SetMorphTimer(class AAzurukPlayerCharacter* MorphOwner, float TimerInterval, bool Active)
+void UAzurukPlayerFeatures::SetMorphTimer(class AAzurukPlayerCharacter* MorphOwner, float TimerInterval)
 {
 	if (MorphOwner)
 	{
@@ -39,10 +41,18 @@ void UAzurukPlayerFeatures::SetMorphTimer(class AAzurukPlayerCharacter* MorphOwn
 
 void UAzurukPlayerFeatures::ModifyMorphTime()
 {
+	morphTime = morphActive ?
+		FMath::Max(morphTime - morphTimeMultiplier, 0.f) :
+		FMath::Min(morphTime + morphTimeMultiplier, maxmorphTime);
 
 	if (morphTime == 0.f)
 	{
-
+		morphActive = false;
+		OwnerComp->ReturnAzurukOwner()->StartMorph(EFeatureName::FeatureDefault, true);
+	}
+	else if (morphTime == maxmorphTime)
+	{
+		SetMorphTimer(OwnerComp->ReturnAzurukOwner(), 0.f);
 	}
 }
 

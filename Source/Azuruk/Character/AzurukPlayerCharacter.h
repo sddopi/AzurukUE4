@@ -177,15 +177,16 @@ private:
 	/**/
 	void StopDNACollect();
 
-	/*  */
-	bool CanCollectDNA();
-
 	/* MorphOne and MorphTwo call SetFeatures with Index */
 	void MorphOne();
 	void MorphTwo();
 
+public:
+
 	/*  */
-	void StartMorph(uint8 index);
+	void StartMorph(uint8 index, bool forceMorph = false);
+
+private:
 
 	/*  */
 	void StopMorph();

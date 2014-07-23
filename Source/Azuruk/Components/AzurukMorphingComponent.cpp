@@ -9,6 +9,7 @@ UAzurukMorphingComponent::UAzurukMorphingComponent(const class FPostConstructIni
 {
 	defaultMorphTime = 100.f;
 	morphTimeInterval = 1.f;
+	morphTimeMultiplier = 1.f;
 	currentMorph = 0;
 }
 
@@ -47,6 +48,36 @@ bool UAzurukMorphingComponent::HasMorph(UAzurukCharacterFeatures* otherFeatures)
 	return false;
 }
 
+void UAzurukMorphingComponent::SetMorph(const uint8 index)
+{
+	if (currentMorph != EFeatureName::FeatureDefault)
+	{
+		morphArray[currentMorph]->morphActive = false;
+	}
+
+	if (index != EFeatureName::FeatureDefault)
+	{
+		morphArray[index]->morphActive = true;
+		morphArray[index]->SetMorphTimer(ownerPlayer, morphTimeInterval);
+	}
+	
+	morphArray[index]->PassCharacterFeatures(ownerPlayer);
+	
+	currentMorph = index;
+}
+
+bool UAzurukMorphingComponent::CanMorph(const uint8 index)
+{
+	if (morphArray.IsValidIndex(index))
+	{
+		if (morphArray[index]->ReturnMorphPercent() != 0.f)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 UAzurukPlayerFeatures* UAzurukMorphingComponent::ReturnMorph(const uint8 index)
 {
 	if (morphArray.IsValidIndex(index))
@@ -54,6 +85,11 @@ UAzurukPlayerFeatures* UAzurukMorphingComponent::ReturnMorph(const uint8 index)
 		return morphArray[index];
 	}
 	return nullptr;
+}
+
+AAzurukPlayerCharacter* UAzurukMorphingComponent::ReturnAzurukOwner()
+{
+	return ownerPlayer;
 }
 
 

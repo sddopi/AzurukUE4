@@ -19,7 +19,10 @@ class UAzurukMorphingComponent : public UActorComponent
 	UPROPERTY(EditDefaultsOnly, Category = "Morphing")
 	float morphTimeInterval;
 
-	/* Interface to Add CharacterFeatures to a PlayerFeature Array
+	UPROPERTY(EditDefaultsOnly, Category = "Morphing")
+	float morphTimeMultiplier;
+
+	/* Add CharacterFeatures to a PlayerFeature Array
 	 * @Param - UAzurukCharacterFeatures
 	 */
 	void AddMorph(UAzurukCharacterFeatures* otherFeatures);
@@ -29,10 +32,22 @@ class UAzurukMorphingComponent : public UActorComponent
 	 */
 	bool HasMorph(UAzurukCharacterFeatures* otherFeatures);
 
+	/*
+	 *
+	 */
+	void SetMorph(const uint8 index);
+
+	/*
+	 *
+	 */
+	bool CanMorph(const uint8 index);
+
 	/* Returns the Indexed UAzurukPlayerFeatures
 	 * @Param - int index
 	 */
 	UAzurukPlayerFeatures* ReturnMorph(const uint8 index);
+
+	AAzurukPlayerCharacter* ReturnAzurukOwner();
 
 private:
 

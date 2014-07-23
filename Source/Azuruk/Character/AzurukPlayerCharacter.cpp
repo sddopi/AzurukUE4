@@ -204,10 +204,15 @@ void AAzurukPlayerCharacter::StopDNACollect()
 void AAzurukPlayerCharacter::MorphOne()	{ StartMorph( EFeatureName::FeatureOne ); }
 void AAzurukPlayerCharacter::MorphTwo() { StartMorph( EFeatureName::FeatureTwo ); }
 
-void AAzurukPlayerCharacter::StartMorph(uint8 index)
+void AAzurukPlayerCharacter::StartMorph(uint8 index, bool forceMorph)
 {
-	if (InIdleStates())
+	if ((InIdleStates() && MorphComp->CanMorph(index)) || forceMorph)
 	{
+		if (forceMorph)
+		{
+			DisableInput(Cast<APlayerController>(GetController()));
+		}
+
 		characterState = MORPHING;
 
 		inputFeature = inputFeature == index ?
@@ -222,17 +227,9 @@ void AAzurukPlayerCharacter::StartMorph(uint8 index)
 
 void AAzurukPlayerCharacter::StopMorph()
 {
-	MorphComp->ReturnMorph(inputFeature)->PassCharacterFeatures(this);
+	EnableInput(Cast<APlayerController>(GetController()));
+	MorphComp->SetMorph(inputFeature);
 	characterState = IDLE;
-}
-
-bool AAzurukPlayerCharacter::CanCollectDNA()
-{
-	bool bIsCorrectStates = (CharacterMovement->MovementMode == EMovementMode::MOVE_Falling ||
-							 CharacterMovement->MovementMode == EMovementMode::MOVE_Walking) &&
-							 characterState == IDLE;
-	//bool bFeaturesFull = featureArray.Num() == maxFeatures;
-	return bIsCorrectStates;
 }
 
 void AAzurukPlayerCharacter::CheckActionInterupt()
