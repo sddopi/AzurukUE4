@@ -10,7 +10,6 @@ AAzurukBaseCharacter::AAzurukBaseCharacter(const class FPostConstructInitializeP
 {
 	// Azuruk Defaults
 	Health = 100.f;
-	maxMorphTime = 20.f;
 
 	// Configure character movement
 	CharacterMovement->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -28,7 +27,9 @@ void AAzurukBaseCharacter::PostInitializeComponents()
 
 	if (Mesh->SkeletalMesh && Mesh->GetAnimInstance())
 	{
-		defaultCharacterFeature = new UAzurukCharacterFeatures(Mesh->SkeletalMesh, Mesh->GetAnimInstance()->GetClass(), morphAnim);
+		defaultCharacterFeature = new UAzurukCharacterFeatures(Mesh->SkeletalMesh, 
+															   Mesh->GetAnimInstance()->GetClass(), 
+															   morphAnim);
 	}	
 
 	if (Role = ROLE_Authority)
@@ -44,6 +45,11 @@ AAzurukBaseCharacter* AAzurukBaseCharacter::GetBaseCharacter()
 
 //////////////////////////////////////////////////////////////////////////
 // Animations
+
+void AAzurukBaseCharacter::SetMorphAnim(UAnimMontage* newMorphAnim)
+{
+	morphAnim = newMorphAnim;
+}
 
 float AAzurukBaseCharacter::PlayAnimMontage(class UAnimMontage* AnimMontage, float InPlayRate, FName StartSectionName)
 {
@@ -169,10 +175,7 @@ void AAzurukBaseCharacter::Destroyed()
 {
 	Super::Destroyed();
 
-	if (!(defaultCharacterFeature->IsMorph()))
-	{
-		delete defaultCharacterFeature;
-	}
+	delete defaultCharacterFeature;
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), deathParticle, GetActorLocation());
 }

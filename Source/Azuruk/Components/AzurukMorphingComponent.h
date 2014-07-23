@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Objects/AzurukCharacterFeatures.h"
+#include "Objects/AzurukPlayerFeatures.h"
 #include "AzurukMorphingComponent.generated.h"
 
 /**
@@ -14,36 +14,35 @@ class UAzurukMorphingComponent : public UActorComponent
 	GENERATED_UCLASS_BODY()
 
 	UPROPERTY(EditDefaultsOnly, Category = "Morphing")
-	float morphTimeMax;
+	float defaultMorphTime;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Morphing")
 	float morphTimeInterval;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Morphing")
-	float morphTimeMultiplier;
+	/* Interface to Add CharacterFeatures to a PlayerFeature Array
+	 * @Param - UAzurukCharacterFeatures
+	 */
+	void AddMorph(UAzurukCharacterFeatures* otherFeatures);
 
-	void AddMorph(UAzurukCharacterFeatures* newMorph);
+	/*
+	 *
+	 */
+	bool HasMorph(UAzurukCharacterFeatures* otherFeatures);
 
-	bool ContainsMorph(UAzurukCharacterFeatures* newMorph);
-
-	bool IsValid(const uint8 index);
-
-	void SetMorph(const uint8 index);
-
-	void SetFeatures(const uint8 index);
-
-	bool CanMorph(const uint8 index);
-
-	bool IsDefaultMorph();
-
-	float GetMorphPercent(const uint8 index) const;
+	/* Returns the Indexed UAzurukPlayerFeatures
+	 * @Param - int index
+	 */
+	UAzurukPlayerFeatures* ReturnMorph(const uint8 index);
 
 private:
 
+	virtual void PostInitProperties() override;
+
 	virtual void BeginDestroy() override;
 
-	TArray<UAzurukCharacterFeatures*> morphArray;
+	class AAzurukPlayerCharacter* ownerPlayer;
+
+	TArray< class UAzurukPlayerFeatures* > morphArray;
 
 	uint8 currentMorph;
-	
 };

@@ -29,8 +29,7 @@ public:
 
 	UAzurukCharacterFeatures* defaultCharacterFeature;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Azuruk|Morphing")
-	float maxMorphTime;
+protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Azuruk|Morphing")
 	UAnimMontage* morphAnim;
@@ -42,6 +41,9 @@ public:
 // Animations
 
 public:
+
+	/* */
+	void SetMorphAnim(UAnimMontage* newMorphAnim);
 	
 	/* play anim montage */
 	virtual float PlayAnimMontage(class UAnimMontage* AnimMontage, float InPlayRate = 1.f, FName StartSectionName = NAME_None) override;

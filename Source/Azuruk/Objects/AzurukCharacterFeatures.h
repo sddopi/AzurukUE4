@@ -18,16 +18,4 @@ public:
 	UClass* featureAnimInstance;
 
 	UAnimMontage* featureMorphAnim;
-
-	float featureTime;
-
-	void SetIsMorph(bool newBool, float time);
-
-	bool IsMorph();
-
-	bool NotNull();
-
-private:
-
-	bool isMorphObject;
 };
