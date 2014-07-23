@@ -158,10 +158,6 @@ private:
 
 public:
 
-	/* Dynamic Mesh Features Array */
-	//UPROPERTY()
-	//TArray<UAzurukCharacterFeatures*> featureArray;
-
 	/* */
 	void SetDefaultFeatures();
 

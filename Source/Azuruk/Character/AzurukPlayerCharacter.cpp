@@ -172,9 +172,10 @@ void AAzurukPlayerCharacter::UseObject()
 
 	AAzurukBaseCharacter* tAChar = Cast<AAzurukBaseCharacter>(usedActor);
 
-	if (tAChar && tAChar->bIsDying && !(MorphComp->ContainsMorph(tAChar->defaultCharacterFeature)))
+	if (tAChar && tAChar->bIsDying && !(MorphComp->HasMorph(tAChar->defaultCharacterFeature)))
 	{
 		StartDNACollect();
+		return;
 	}
 }
 
@@ -183,7 +184,7 @@ void AAzurukPlayerCharacter::UseObject()
 
 void AAzurukPlayerCharacter::StartDNACollect()
 {
-	if (CanCollectDNA())
+	if (InIdleStates())
 	{
 		characterState = DNACOLLECT;
 
@@ -205,7 +206,7 @@ void AAzurukPlayerCharacter::MorphTwo() { StartMorph( EFeatureName::FeatureTwo )
 
 void AAzurukPlayerCharacter::StartMorph(uint8 index)
 {
-	if (MorphComp->CanMorph(index))
+	if (InIdleStates())
 	{
 		characterState = MORPHING;
 
@@ -221,7 +222,7 @@ void AAzurukPlayerCharacter::StartMorph(uint8 index)
 
 void AAzurukPlayerCharacter::StopMorph()
 {
-	MorphComp->SetMorph(inputFeature);
+	MorphComp->ReturnMorph(inputFeature)->PassCharacterFeatures(this);
 	characterState = IDLE;
 }
 
