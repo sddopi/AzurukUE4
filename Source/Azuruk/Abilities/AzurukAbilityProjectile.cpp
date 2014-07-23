@@ -42,7 +42,6 @@ void AAzurukAbilityProjectile::UseAbility()
 	const float ProjectileAdjustRange = 10000.0f;
 	const FVector StartTrace = GetCameraDamageStartLocation(ShootDir);
 	const FVector EndTrace = StartTrace + ShootDir * ProjectileAdjustRange;
-	FString temp = FString::Printf(TEXT("(%f, %f, %f)"), StartTrace.X, StartTrace.Y, StartTrace.Z);
 
 	DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor(255, 0, 0), true);
 	FHitResult Impact = AbilityTrace(StartTrace, EndTrace);
@@ -87,6 +86,7 @@ void AAzurukAbilityProjectile::UseAbility()
 	}
 
 	DrawDebugLine(GetWorld(), Origin, EndTrace, FColor(0, 255, 0), true);
+	DrawDebugLine(GetWorld(), Origin, ShootDir, FColor(0, 255, 0), true);
 	UE_LOG(LogTemp, Log, TEXT("ability used"));
 	ServerFireProjectile(Origin, ShootDir);
 }
@@ -107,7 +107,6 @@ void AAzurukAbilityProjectile::ServerFireProjectile_Implementation(FVector Origi
 		Projectile->InitVelocity(ShootDir);
 
 		UGameplayStatics::FinishSpawningActor(Projectile, SpawnTM);
-		UE_LOG(LogTemp, Log, TEXT("projectile spawned"));
 	}
 }
 

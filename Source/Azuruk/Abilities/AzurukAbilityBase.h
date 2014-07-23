@@ -99,15 +99,15 @@ class AAzurukAbilityBase : public AActor
 	/** ability removed from pawn */
 	virtual void OnRemoveAbility();
 
-	void OnAbilityStart();
-	void OnAbilityStop();
-	void OnAbilityInitialized();
+	virtual void OnAbilityStart();
+	virtual void OnAbilityStop();
+	virtual void OnAbilityInitialized();
 
 //////////////////////////////////////////////////////////////////////////
 // Replication
 
 	UFUNCTION()
-		void OnRep_AbilityOwner();
+	void OnRep_AbilityOwner();
 
 //////////////////////////////////////////////////////////////////////////
 // Reading Data

@@ -164,6 +164,11 @@ void AAzurukAbilityBase::InputReleased()
 		OnAbilityStop();
 		bIsChanneled = false;
 	}
+
+	if (AbilityConfig.AbilityCastType == ECastType::Instant)
+	{
+		OnAbilityStop();
+	}
 }
 
 void AAzurukAbilityBase::SetKeyBinding(FString NewKeyBinding)
